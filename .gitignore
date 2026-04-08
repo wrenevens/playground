@@ -1,0 +1,5 @@
+.env
+.python-version
+databases/
+pyproject.toml
+uv.lock

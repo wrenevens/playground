@@ -5,7 +5,7 @@ Configuration file for text-to-SQL agent.
 # LLM Configuration
 DEFAULT_LLM_PROVIDER = "openai"
 DEFAULT_OPENAI_MODEL = "gpt-4o-mini"
-DEFAULT_GROQ_MODEL = "openai/gpt-oss-120b"
+DEFAULT_GROQ_MODEL = "openai/gpt-oss-20b"
 LLM_TEMPERATURE = 0.3
 
 # Schema Retrieval Configuration

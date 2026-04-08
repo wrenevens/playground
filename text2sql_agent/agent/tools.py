@@ -55,16 +55,60 @@ class ToolSet:
             question=state.normalized_question or state.question,
             sample_limit=SCHEMA_SAMPLE_ROW_LIMIT,
         )
+        state.add_log(
+            "grast_sql.schema_enricher",
+            "Built enriched schema and FD-style graph",
+            {
+                "num_tables": len(enriched_schema.get("tables", [])),
+                "num_columns": len(enriched_schema.get("columns", [])),
+                "num_graph_edges": len(enriched_schema.get("graph", {}).get("edges", [])),
+            },
+        )
 
         scored_columns = self._rank_columns(state.question, enriched_schema.get("columns", []))
+        state.add_log(
+            "grast_sql.query_aware_column_encoder",
+            "Computed query-aware column relevance scores",
+            {
+                "top_candidates": [
+                    {
+                        "column": column.get("qualified_name"),
+                        "score": round(float(column.get("score", 0.0)), 3),
+                    }
+                    for column in scored_columns[:SCHEMA_RERANK_CANDIDATES]
+                ],
+            },
+        )
+
         rerank_candidates = scored_columns[:SCHEMA_RERANK_CANDIDATES]
         reranked_columns = self._llm_rerank_columns(state, rerank_candidates) or rerank_candidates
+        state.add_log(
+            "grast_sql.graph_based_reranker",
+            "Reranked top columns with structural priors",
+            {
+                "input_candidates": [c.get("qualified_name") for c in rerank_candidates],
+                "reranked_candidates": [c.get("qualified_name") for c in reranked_columns],
+            },
+        )
+
         selected_columns = reranked_columns[:SCHEMA_TOP_K_COLUMNS]
 
         selected_column_names = [column["qualified_name"] for column in selected_columns]
         connected_column_names = self.schema_loader.get_connected_columns(
             selected_column_names,
             max_hops=SCHEMA_GRAPH_HOPS,
+        )
+        state.add_log(
+            "grast_sql.steiner_tree_spanner",
+            "Expanded selected columns to preserve join connectivity",
+            {
+                "selected_columns": selected_column_names,
+                "connected_columns": connected_column_names,
+                "added_columns": [
+                    col for col in connected_column_names if col not in set(selected_column_names)
+                ],
+                "max_hops": SCHEMA_GRAPH_HOPS,
+            },
         )
 
         column_records = self._resolve_column_records(
@@ -85,6 +129,16 @@ class ToolSet:
             "graph": enriched_schema.get("graph", {}),
             "join_paths": join_paths,
             "compact_schema": compact_schema,
+            "grast_sql": {
+                "stage_names": [
+                    "schema_enricher",
+                    "query_aware_column_encoder",
+                    "graph_based_reranker",
+                    "steiner_tree_spanner",
+                ],
+                "ranked_top_k": [col.get("qualified_name") for col in reranked_columns[:SCHEMA_TOP_K_COLUMNS]],
+                "connected_top_k": connected_column_names,
+            },
             "notes": [
                 "Columns ranked by query relevance and boosted by schema structure.",
                 "Key columns were retained to preserve valid join paths.",

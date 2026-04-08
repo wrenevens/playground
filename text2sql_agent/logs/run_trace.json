@@ -1,0 +1,1751 @@
+{
+  "question": "Could you tell me the number of orders, average payment per order and customer lifespan in weeks of the 3 custumers with the highest average payment per order, where the lifespan is calculated by subtracting the earliest purchase date from the latest purchase date in days, dividing by seven, and if the result is less than seven days, setting it to 1.0?",
+  "db_id": "custom_db",
+  "evidence": null,
+  "normalized_question": "Could you tell me the number of orders, average payment per order and customer lifespan in weeks of the 3 custumers with the highest average payment per order, where the lifespan is calculated by subtracting the earliest purchase date from the latest purchase date in days, dividing by seven, and if the result is less than seven days, setting it to 1.0?",
+  "schema_context": {
+    "tables": [
+      "orders"
+    ],
+    "selected_tables": [
+      {
+        "table": "orders",
+        "score": 8.75,
+        "columns": [
+          {
+            "table": "orders",
+            "column": "customer_id",
+            "qualified_name": "orders.customer_id",
+            "type": "TEXT",
+            "description": "orders.customer_id (TEXT) likely stores customer id. Sample values: 9ef432eb6251297304e76186b10a928d, b0830fb4747a6c6d20dea0b8c802d7ef, 41ce2a54c0b03bf3443c3d931a367089.",
+            "sample_values": [
+              "9ef432eb6251297304e76186b10a928d",
+              "b0830fb4747a6c6d20dea0b8c802d7ef",
+              "41ce2a54c0b03bf3443c3d931a367089"
+            ],
+            "is_primary_key": false,
+            "is_foreign_key": true,
+            "key_type": "foreign_key",
+            "score": 8.75
+          },
+          {
+            "table": "orders",
+            "column": "order_id",
+            "qualified_name": "orders.order_id",
+            "type": "TEXT",
+            "description": "orders.order_id (TEXT) likely stores order id. Sample values: e481f51cbdc54678b7cc49136f2d6af7, 53cdb2fc8bc7dce0b6741e2150273451, 47770eb9100c2d0c44946d9cf07ec65d.",
+            "sample_values": [
+              "e481f51cbdc54678b7cc49136f2d6af7",
+              "53cdb2fc8bc7dce0b6741e2150273451",
+              "47770eb9100c2d0c44946d9cf07ec65d"
+            ],
+            "is_primary_key": true,
+            "is_foreign_key": false,
+            "key_type": "primary_key",
+            "score": 7.0
+          },
+          {
+            "table": "orders",
+            "column": "order_purchase_timestamp",
+            "qualified_name": "orders.order_purchase_timestamp",
+            "type": "TEXT",
+            "description": "orders.order_purchase_timestamp (TEXT) likely stores order purchase timestamp. Sample values: 2017-10-02 10:56:33, 2018-07-24 20:41:37, 2018-08-08 08:38:49.",
+            "sample_values": [
+              "2017-10-02 10:56:33",
+              "2018-07-24 20:41:37",
+              "2018-08-08 08:38:49"
+            ],
+            "is_primary_key": false,
+            "is_foreign_key": false,
+            "key_type": "regular",
+            "score": 8.0
+          }
+        ]
+      }
+    ],
+    "columns": [
+      {
+        "table": "orders",
+        "column": "customer_id",
+        "qualified_name": "orders.customer_id",
+        "type": "TEXT",
+        "description": "orders.customer_id (TEXT) likely stores customer id. Sample values: 9ef432eb6251297304e76186b10a928d, b0830fb4747a6c6d20dea0b8c802d7ef, 41ce2a54c0b03bf3443c3d931a367089.",
+        "sample_values": [
+          "9ef432eb6251297304e76186b10a928d",
+          "b0830fb4747a6c6d20dea0b8c802d7ef",
+          "41ce2a54c0b03bf3443c3d931a367089"
+        ],
+        "is_primary_key": false,
+        "is_foreign_key": true,
+        "key_type": "foreign_key",
+        "score": 8.75
+      },
+      {
+        "table": "orders",
+        "column": "order_id",
+        "qualified_name": "orders.order_id",
+        "type": "TEXT",
+        "description": "orders.order_id (TEXT) likely stores order id. Sample values: e481f51cbdc54678b7cc49136f2d6af7, 53cdb2fc8bc7dce0b6741e2150273451, 47770eb9100c2d0c44946d9cf07ec65d.",
+        "sample_values": [
+          "e481f51cbdc54678b7cc49136f2d6af7",
+          "53cdb2fc8bc7dce0b6741e2150273451",
+          "47770eb9100c2d0c44946d9cf07ec65d"
+        ],
+        "is_primary_key": true,
+        "is_foreign_key": false,
+        "key_type": "primary_key",
+        "score": 7.0
+      },
+      {
+        "table": "orders",
+        "column": "order_purchase_timestamp",
+        "qualified_name": "orders.order_purchase_timestamp",
+        "type": "TEXT",
+        "description": "orders.order_purchase_timestamp (TEXT) likely stores order purchase timestamp. Sample values: 2017-10-02 10:56:33, 2018-07-24 20:41:37, 2018-08-08 08:38:49.",
+        "sample_values": [
+          "2017-10-02 10:56:33",
+          "2018-07-24 20:41:37",
+          "2018-08-08 08:38:49"
+        ],
+        "is_primary_key": false,
+        "is_foreign_key": false,
+        "key_type": "regular",
+        "score": 8.0
+      }
+    ],
+    "selected_columns": [
+      {
+        "table": "orders",
+        "column": "customer_id",
+        "qualified_name": "orders.customer_id",
+        "type": "TEXT",
+        "description": "orders.customer_id (TEXT) likely stores customer id. Sample values: 9ef432eb6251297304e76186b10a928d, b0830fb4747a6c6d20dea0b8c802d7ef, 41ce2a54c0b03bf3443c3d931a367089.",
+        "sample_values": [
+          "9ef432eb6251297304e76186b10a928d",
+          "b0830fb4747a6c6d20dea0b8c802d7ef",
+          "41ce2a54c0b03bf3443c3d931a367089"
+        ],
+        "is_primary_key": false,
+        "is_foreign_key": true,
+        "key_type": "foreign_key",
+        "score": 29.45,
+        "evidence": [
+          "column:customer",
+          "column:me",
+          "column:to",
+          "table:order",
+          "table:orders"
+        ]
+      },
+      {
+        "table": "orders",
+        "column": "order_purchase_timestamp",
+        "qualified_name": "orders.order_purchase_timestamp",
+        "type": "TEXT",
+        "description": "orders.order_purchase_timestamp (TEXT) likely stores order purchase timestamp. Sample values: 2017-10-02 10:56:33, 2018-07-24 20:41:37, 2018-08-08 08:38:49.",
+        "sample_values": [
+          "2017-10-02 10:56:33",
+          "2018-07-24 20:41:37",
+          "2018-08-08 08:38:49"
+        ],
+        "is_primary_key": false,
+        "is_foreign_key": false,
+        "key_type": "regular",
+        "score": 31.5,
+        "evidence": [
+          "column:me",
+          "column:order",
+          "column:purchase",
+          "table:orders",
+          "text:to"
+        ]
+      }
+    ],
+    "graph": {
+      "nodes": {
+        "product_category_name_translation.product_category_name": {
+          "table": "product_category_name_translation",
+          "column": "product_category_name",
+          "type": "TEXT",
+          "key_type": "primary_key"
+        },
+        "product_category_name_translation.product_category_name_english": {
+          "table": "product_category_name_translation",
+          "column": "product_category_name_english",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "sellers.seller_id": {
+          "table": "sellers",
+          "column": "seller_id",
+          "type": "TEXT",
+          "key_type": "primary_key"
+        },
+        "sellers.seller_zip_code_prefix": {
+          "table": "sellers",
+          "column": "seller_zip_code_prefix",
+          "type": "INTEGER",
+          "key_type": "regular"
+        },
+        "sellers.seller_city": {
+          "table": "sellers",
+          "column": "seller_city",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "sellers.seller_state": {
+          "table": "sellers",
+          "column": "seller_state",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "customers.customer_id": {
+          "table": "customers",
+          "column": "customer_id",
+          "type": "TEXT",
+          "key_type": "primary_key"
+        },
+        "customers.customer_unique_id": {
+          "table": "customers",
+          "column": "customer_unique_id",
+          "type": "TEXT",
+          "key_type": "table_key"
+        },
+        "customers.customer_zip_code_prefix": {
+          "table": "customers",
+          "column": "customer_zip_code_prefix",
+          "type": "INTEGER",
+          "key_type": "regular"
+        },
+        "customers.customer_city": {
+          "table": "customers",
+          "column": "customer_city",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "customers.customer_state": {
+          "table": "customers",
+          "column": "customer_state",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "geolocation.geolocation_zip_code_prefix": {
+          "table": "geolocation",
+          "column": "geolocation_zip_code_prefix",
+          "type": "INTEGER",
+          "key_type": "primary_key"
+        },
+        "geolocation.geolocation_lat": {
+          "table": "geolocation",
+          "column": "geolocation_lat",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "geolocation.geolocation_lng": {
+          "table": "geolocation",
+          "column": "geolocation_lng",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "geolocation.geolocation_city": {
+          "table": "geolocation",
+          "column": "geolocation_city",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "geolocation.geolocation_state": {
+          "table": "geolocation",
+          "column": "geolocation_state",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "order_items.order_id": {
+          "table": "order_items",
+          "column": "order_id",
+          "type": "TEXT",
+          "key_type": "foreign_key"
+        },
+        "order_items.order_item_id": {
+          "table": "order_items",
+          "column": "order_item_id",
+          "type": "INTEGER",
+          "key_type": "primary_key"
+        },
+        "order_items.product_id": {
+          "table": "order_items",
+          "column": "product_id",
+          "type": "TEXT",
+          "key_type": "foreign_key"
+        },
+        "order_items.seller_id": {
+          "table": "order_items",
+          "column": "seller_id",
+          "type": "TEXT",
+          "key_type": "foreign_key"
+        },
+        "order_items.shipping_limit_date": {
+          "table": "order_items",
+          "column": "shipping_limit_date",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "order_items.price": {
+          "table": "order_items",
+          "column": "price",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "order_items.freight_value": {
+          "table": "order_items",
+          "column": "freight_value",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "order_payments.order_id": {
+          "table": "order_payments",
+          "column": "order_id",
+          "type": "TEXT",
+          "key_type": "primary_key"
+        },
+        "order_payments.payment_sequential": {
+          "table": "order_payments",
+          "column": "payment_sequential",
+          "type": "INTEGER",
+          "key_type": "regular"
+        },
+        "order_payments.payment_type": {
+          "table": "order_payments",
+          "column": "payment_type",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "order_payments.payment_installments": {
+          "table": "order_payments",
+          "column": "payment_installments",
+          "type": "INTEGER",
+          "key_type": "regular"
+        },
+        "order_payments.payment_value": {
+          "table": "order_payments",
+          "column": "payment_value",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "order_reviews.review_id": {
+          "table": "order_reviews",
+          "column": "review_id",
+          "type": "TEXT",
+          "key_type": "primary_key"
+        },
+        "order_reviews.order_id": {
+          "table": "order_reviews",
+          "column": "order_id",
+          "type": "TEXT",
+          "key_type": "foreign_key"
+        },
+        "order_reviews.review_score": {
+          "table": "order_reviews",
+          "column": "review_score",
+          "type": "INTEGER",
+          "key_type": "regular"
+        },
+        "order_reviews.review_comment_title": {
+          "table": "order_reviews",
+          "column": "review_comment_title",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "order_reviews.review_comment_message": {
+          "table": "order_reviews",
+          "column": "review_comment_message",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "order_reviews.review_creation_date": {
+          "table": "order_reviews",
+          "column": "review_creation_date",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "order_reviews.review_answer_timestamp": {
+          "table": "order_reviews",
+          "column": "review_answer_timestamp",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "orders.order_id": {
+          "table": "orders",
+          "column": "order_id",
+          "type": "TEXT",
+          "key_type": "primary_key"
+        },
+        "orders.customer_id": {
+          "table": "orders",
+          "column": "customer_id",
+          "type": "TEXT",
+          "key_type": "foreign_key"
+        },
+        "orders.order_status": {
+          "table": "orders",
+          "column": "order_status",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "orders.order_purchase_timestamp": {
+          "table": "orders",
+          "column": "order_purchase_timestamp",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "orders.order_approved_at": {
+          "table": "orders",
+          "column": "order_approved_at",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "orders.order_delivered_carrier_date": {
+          "table": "orders",
+          "column": "order_delivered_carrier_date",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "orders.order_delivered_customer_date": {
+          "table": "orders",
+          "column": "order_delivered_customer_date",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "orders.order_estimated_delivery_date": {
+          "table": "orders",
+          "column": "order_estimated_delivery_date",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "products.product_id": {
+          "table": "products",
+          "column": "product_id",
+          "type": "TEXT",
+          "key_type": "primary_key"
+        },
+        "products.product_category_name": {
+          "table": "products",
+          "column": "product_category_name",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "products.product_name_lenght": {
+          "table": "products",
+          "column": "product_name_lenght",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "products.product_description_lenght": {
+          "table": "products",
+          "column": "product_description_lenght",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "products.product_photos_qty": {
+          "table": "products",
+          "column": "product_photos_qty",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "products.product_weight_g": {
+          "table": "products",
+          "column": "product_weight_g",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "products.product_length_cm": {
+          "table": "products",
+          "column": "product_length_cm",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "products.product_height_cm": {
+          "table": "products",
+          "column": "product_height_cm",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "products.product_width_cm": {
+          "table": "products",
+          "column": "product_width_cm",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "leads_qualified.mql_id": {
+          "table": "leads_qualified",
+          "column": "mql_id",
+          "type": "TEXT",
+          "key_type": "primary_key"
+        },
+        "leads_qualified.first_contact_date": {
+          "table": "leads_qualified",
+          "column": "first_contact_date",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "leads_qualified.landing_page_id": {
+          "table": "leads_qualified",
+          "column": "landing_page_id",
+          "type": "TEXT",
+          "key_type": "table_key"
+        },
+        "leads_qualified.origin": {
+          "table": "leads_qualified",
+          "column": "origin",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "leads_closed.mql_id": {
+          "table": "leads_closed",
+          "column": "mql_id",
+          "type": "TEXT",
+          "key_type": "primary_key"
+        },
+        "leads_closed.seller_id": {
+          "table": "leads_closed",
+          "column": "seller_id",
+          "type": "TEXT",
+          "key_type": "foreign_key"
+        },
+        "leads_closed.sdr_id": {
+          "table": "leads_closed",
+          "column": "sdr_id",
+          "type": "TEXT",
+          "key_type": "table_key"
+        },
+        "leads_closed.sr_id": {
+          "table": "leads_closed",
+          "column": "sr_id",
+          "type": "TEXT",
+          "key_type": "table_key"
+        },
+        "leads_closed.won_date": {
+          "table": "leads_closed",
+          "column": "won_date",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "leads_closed.business_segment": {
+          "table": "leads_closed",
+          "column": "business_segment",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "leads_closed.lead_type": {
+          "table": "leads_closed",
+          "column": "lead_type",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "leads_closed.lead_behaviour_profile": {
+          "table": "leads_closed",
+          "column": "lead_behaviour_profile",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "leads_closed.has_company": {
+          "table": "leads_closed",
+          "column": "has_company",
+          "type": "INTEGER",
+          "key_type": "regular"
+        },
+        "leads_closed.has_gtin": {
+          "table": "leads_closed",
+          "column": "has_gtin",
+          "type": "INTEGER",
+          "key_type": "regular"
+        },
+        "leads_closed.average_stock": {
+          "table": "leads_closed",
+          "column": "average_stock",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "leads_closed.business_type": {
+          "table": "leads_closed",
+          "column": "business_type",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "leads_closed.declared_product_catalog_size": {
+          "table": "leads_closed",
+          "column": "declared_product_catalog_size",
+          "type": "REAL",
+          "key_type": "regular"
+        },
+        "leads_closed.declared_monthly_revenue": {
+          "table": "leads_closed",
+          "column": "declared_monthly_revenue",
+          "type": "REAL",
+          "key_type": "regular"
+        }
+      },
+      "edges": [
+        {
+          "source": "product_category_name_translation.product_category_name_english",
+          "target": "product_category_name_translation.product_category_name",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "product_category_name_translation.product_category_name",
+          "target": "product_category_name_translation.product_category_name_english",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "sellers.seller_zip_code_prefix",
+          "target": "sellers.seller_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "sellers.seller_id",
+          "target": "sellers.seller_zip_code_prefix",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "sellers.seller_city",
+          "target": "sellers.seller_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "sellers.seller_id",
+          "target": "sellers.seller_city",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "sellers.seller_state",
+          "target": "sellers.seller_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "sellers.seller_id",
+          "target": "sellers.seller_state",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_unique_id",
+          "target": "customers.customer_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_id",
+          "target": "customers.customer_unique_id",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_zip_code_prefix",
+          "target": "customers.customer_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_id",
+          "target": "customers.customer_zip_code_prefix",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_city",
+          "target": "customers.customer_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_id",
+          "target": "customers.customer_city",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_state",
+          "target": "customers.customer_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_id",
+          "target": "customers.customer_state",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "geolocation.geolocation_lat",
+          "target": "geolocation.geolocation_zip_code_prefix",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "geolocation.geolocation_zip_code_prefix",
+          "target": "geolocation.geolocation_lat",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "geolocation.geolocation_lng",
+          "target": "geolocation.geolocation_zip_code_prefix",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "geolocation.geolocation_zip_code_prefix",
+          "target": "geolocation.geolocation_lng",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "geolocation.geolocation_city",
+          "target": "geolocation.geolocation_zip_code_prefix",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "geolocation.geolocation_zip_code_prefix",
+          "target": "geolocation.geolocation_city",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "geolocation.geolocation_state",
+          "target": "geolocation.geolocation_zip_code_prefix",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "geolocation.geolocation_zip_code_prefix",
+          "target": "geolocation.geolocation_state",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_items.seller_id",
+          "target": "sellers.seller_id",
+          "type": "foreign_key",
+          "weight": 0
+        },
+        {
+          "source": "sellers.seller_id",
+          "target": "order_items.seller_id",
+          "type": "foreign_key_reverse",
+          "weight": 0
+        },
+        {
+          "source": "order_items.order_id",
+          "target": "order_items.order_item_id",
+          "type": "column_to_foreign_key",
+          "weight": 1
+        },
+        {
+          "source": "order_items.order_item_id",
+          "target": "order_items.order_id",
+          "type": "column_to_foreign_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_items.product_id",
+          "target": "order_items.order_item_id",
+          "type": "column_to_foreign_key",
+          "weight": 1
+        },
+        {
+          "source": "order_items.order_item_id",
+          "target": "order_items.product_id",
+          "type": "column_to_foreign_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_items.seller_id",
+          "target": "order_items.order_item_id",
+          "type": "column_to_foreign_key",
+          "weight": 1
+        },
+        {
+          "source": "order_items.order_item_id",
+          "target": "order_items.seller_id",
+          "type": "column_to_foreign_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_items.shipping_limit_date",
+          "target": "order_items.order_item_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_items.order_item_id",
+          "target": "order_items.shipping_limit_date",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_items.price",
+          "target": "order_items.order_item_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_items.order_item_id",
+          "target": "order_items.price",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_items.freight_value",
+          "target": "order_items.order_item_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_items.order_item_id",
+          "target": "order_items.freight_value",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_payments.payment_sequential",
+          "target": "order_payments.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_payments.order_id",
+          "target": "order_payments.payment_sequential",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_payments.payment_type",
+          "target": "order_payments.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_payments.order_id",
+          "target": "order_payments.payment_type",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_payments.payment_installments",
+          "target": "order_payments.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_payments.order_id",
+          "target": "order_payments.payment_installments",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_payments.payment_value",
+          "target": "order_payments.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_payments.order_id",
+          "target": "order_payments.payment_value",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.order_id",
+          "target": "order_reviews.review_id",
+          "type": "column_to_foreign_key",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.review_id",
+          "target": "order_reviews.order_id",
+          "type": "column_to_foreign_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.review_score",
+          "target": "order_reviews.review_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.review_id",
+          "target": "order_reviews.review_score",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.review_comment_title",
+          "target": "order_reviews.review_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.review_id",
+          "target": "order_reviews.review_comment_title",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.review_comment_message",
+          "target": "order_reviews.review_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.review_id",
+          "target": "order_reviews.review_comment_message",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.review_creation_date",
+          "target": "order_reviews.review_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.review_id",
+          "target": "order_reviews.review_creation_date",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.review_answer_timestamp",
+          "target": "order_reviews.review_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_reviews.review_id",
+          "target": "order_reviews.review_answer_timestamp",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "orders.customer_id",
+          "target": "customers.customer_id",
+          "type": "foreign_key",
+          "weight": 0
+        },
+        {
+          "source": "customers.customer_id",
+          "target": "orders.customer_id",
+          "type": "foreign_key_reverse",
+          "weight": 0
+        },
+        {
+          "source": "orders.customer_id",
+          "target": "orders.order_id",
+          "type": "column_to_foreign_key",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_id",
+          "target": "orders.customer_id",
+          "type": "column_to_foreign_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_status",
+          "target": "orders.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_id",
+          "target": "orders.order_status",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_purchase_timestamp",
+          "target": "orders.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_id",
+          "target": "orders.order_purchase_timestamp",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_approved_at",
+          "target": "orders.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_id",
+          "target": "orders.order_approved_at",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_delivered_carrier_date",
+          "target": "orders.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_id",
+          "target": "orders.order_delivered_carrier_date",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_delivered_customer_date",
+          "target": "orders.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_id",
+          "target": "orders.order_delivered_customer_date",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_estimated_delivery_date",
+          "target": "orders.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_id",
+          "target": "orders.order_estimated_delivery_date",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.product_category_name",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.product_category_name",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.product_name_lenght",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.product_name_lenght",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.product_description_lenght",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.product_description_lenght",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.product_photos_qty",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.product_photos_qty",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.product_weight_g",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.product_weight_g",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.product_length_cm",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.product_length_cm",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.product_height_cm",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.product_height_cm",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.product_width_cm",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.product_width_cm",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_qualified.first_contact_date",
+          "target": "leads_qualified.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_qualified.mql_id",
+          "target": "leads_qualified.first_contact_date",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_qualified.landing_page_id",
+          "target": "leads_qualified.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_qualified.mql_id",
+          "target": "leads_qualified.landing_page_id",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_qualified.origin",
+          "target": "leads_qualified.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_qualified.mql_id",
+          "target": "leads_qualified.origin",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.seller_id",
+          "target": "sellers.seller_id",
+          "type": "foreign_key",
+          "weight": 0
+        },
+        {
+          "source": "sellers.seller_id",
+          "target": "leads_closed.seller_id",
+          "type": "foreign_key_reverse",
+          "weight": 0
+        },
+        {
+          "source": "leads_closed.seller_id",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_foreign_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.seller_id",
+          "type": "column_to_foreign_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.sdr_id",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.sdr_id",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.sr_id",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.sr_id",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.won_date",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.won_date",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.business_segment",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.business_segment",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.lead_type",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.lead_type",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.lead_behaviour_profile",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.lead_behaviour_profile",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.has_company",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.has_company",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.has_gtin",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.has_gtin",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.average_stock",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.average_stock",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.business_type",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.business_type",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.declared_product_catalog_size",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.declared_product_catalog_size",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.declared_monthly_revenue",
+          "target": "leads_closed.mql_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "leads_closed.mql_id",
+          "target": "leads_closed.declared_monthly_revenue",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        }
+      ]
+    },
+    "join_paths": [],
+    "compact_schema": "RELEVANT SCHEMA:\nTable: orders\n  - customer_id (TEXT) [FK]: orders.customer_id (TEXT) likely stores customer id. Sample values: 9ef432eb6251297304e76186b10a928d, b0830fb4747a6c6d20dea0b8c802d7ef, 41ce2a54c0b03bf3443c3d931a367089. Sample: 9ef432eb6251297304e76186b10a928d, b0830fb4747a6c6d20dea0b8c802d7ef, 41ce2a54c0b03bf3443c3d931a367089.\n  - order_purchase_timestamp (TEXT): orders.order_purchase_timestamp (TEXT) likely stores order purchase timestamp. Sample values: 2017-10-02 10:56:33, 2018-07-24 20:41:37, 2018-08-08 08:38:49. Sample: 2017-10-02 10:56:33, 2018-07-24 20:41:37, 2018-08-08 08:38:49.\n  - order_id (TEXT) [PK]: orders.order_id (TEXT) likely stores order id. Sample values: e481f51cbdc54678b7cc49136f2d6af7, 53cdb2fc8bc7dce0b6741e2150273451, 47770eb9100c2d0c44946d9cf07ec65d. Sample: e481f51cbdc54678b7cc49136f2d6af7, 53cdb2fc8bc7dce0b6741e2150273451, 47770eb9100c2d0c44946d9cf07ec65d.",
+    "grast_sql": {
+      "stage_names": [
+        "schema_enricher",
+        "query_aware_column_encoder",
+        "graph_based_reranker",
+        "steiner_tree_spanner"
+      ],
+      "ranked_top_k": [
+        "orders.customer_id",
+        "orders.order_purchase_timestamp"
+      ],
+      "connected_top_k": [
+        "orders.customer_id",
+        "orders.order_id",
+        "orders.order_purchase_timestamp"
+      ]
+    },
+    "notes": [
+      "Columns ranked by query relevance and boosted by schema structure.",
+      "Key columns were retained to preserve valid join paths."
+    ]
+  },
+  "value_context": {
+    "matched_values": {
+      "orders": {
+        "sample_rows": [
+          {
+            "order_id": "e481f51cbdc54678b7cc49136f2d6af7",
+            "customer_id": "9ef432eb6251297304e76186b10a928d",
+            "order_status": "delivered",
+            "order_purchase_timestamp": "2017-10-02 10:56:33",
+            "order_approved_at": "2017-10-02 11:07:15",
+            "order_delivered_carrier_date": "2017-10-04 19:55:00",
+            "order_delivered_customer_date": "2017-10-10 21:25:13",
+            "order_estimated_delivery_date": "2017-10-18 00:00:00"
+          },
+          {
+            "order_id": "53cdb2fc8bc7dce0b6741e2150273451",
+            "customer_id": "b0830fb4747a6c6d20dea0b8c802d7ef",
+            "order_status": "delivered",
+            "order_purchase_timestamp": "2018-07-24 20:41:37",
+            "order_approved_at": "2018-07-26 03:24:27",
+            "order_delivered_carrier_date": "2018-07-26 14:31:00",
+            "order_delivered_customer_date": "2018-08-07 15:27:45",
+            "order_estimated_delivery_date": "2018-08-13 00:00:00"
+          }
+        ]
+      }
+    }
+  },
+  "plan": {
+    "raw_plan": "**Step\u2011by\u2011Step Plan for the Query**\n\n| # | What to do | Why / How |\n|---|------------|-----------|\n| **1** | **Select the source table** | Use only the `orders` table (no joins needed). |\n| **2** | **Group by customer** | `GROUP BY customer_id` to aggregate per customer. |\n| **3** | **Compute basic aggregates** | - `COUNT(*) AS num_orders` \u2013 total orders per customer.<br>- `AVG(order_amount) AS avg_payment` \u2013 average payment per order (assumes a numeric column `order_amount` exists). |\n| **4** | **Determine first & last purchase dates** | - `MIN(order_purchase_timestamp) AS first_date`.<br>- `MAX(order_purchase_timestamp) AS last_date`. |\n| **5** | **Calculate raw lifespan in weeks** | `DATEDIFF(day, first_date, last_date) / 7.0 AS raw_lifespan_weeks`. (Use the appropriate date\u2011difference function for your SQL dialect.) |\n| **6** | **Apply the \u201cminimum 1 week\u201d rule** | `CASE WHEN raw_lifespan_weeks < 7 THEN 1.0 ELSE raw_lifespan_weeks END AS lifespan_weeks`. |\n| **7** | **Order the results** | `ORDER BY avg_payment DESC` to rank customers by highest average payment. |\n| **8** | **Limit to top 3 customers** | `LIMIT 3` (or `FETCH FIRST 3 ROWS ONLY` depending on dialect). |\n| **9** | **Select final columns** | `customer_id, num_orders, avg_payment, lifespan_weeks`. |\n\n**Summary of the Logical Flow**\n\n1. **Source**: `orders` table.  \n2. **Group**: by `customer_id`.  \n3. **Aggregations**: count orders, average payment, min/max purchase timestamps.  \n4. **Compute lifespan**: difference in days \u2192 weeks \u2192 apply minimum\u20111\u2011week rule.  \n5. **Sort**: descending by average payment.  \n6. **Limit**: top 3 rows.  \n\nThis plan can be translated into a single SQL statement once the exact date\u2011difference function and column names (e.g., `order_amount`) are confirmed.",
+    "steps": [
+      "**Step\u2011by\u2011Step Plan for the Query**",
+      "",
+      "| # | What to do | Why / How |",
+      "|---|------------|-----------|",
+      "| **1** | **Select the source table** | Use only the `orders` table (no joins needed). |",
+      "| **2** | **Group by customer** | `GROUP BY customer_id` to aggregate per customer. |",
+      "| **3** | **Compute basic aggregates** | - `COUNT(*) AS num_orders` \u2013 total orders per customer.<br>- `AVG(order_amount) AS avg_payment` \u2013 average payment per order (assumes a numeric column `order_amount` exists). |",
+      "| **4** | **Determine first & last purchase dates** | - `MIN(order_purchase_timestamp) AS first_date`.<br>- `MAX(order_purchase_timestamp) AS last_date`. |",
+      "| **5** | **Calculate raw lifespan in weeks** | `DATEDIFF(day, first_date, last_date) / 7.0 AS raw_lifespan_weeks`. (Use the appropriate date\u2011difference function for your SQL dialect.) |",
+      "| **6** | **Apply the \u201cminimum 1 week\u201d rule** | `CASE WHEN raw_lifespan_weeks < 7 THEN 1.0 ELSE raw_lifespan_weeks END AS lifespan_weeks`. |",
+      "| **7** | **Order the results** | `ORDER BY avg_payment DESC` to rank customers by highest average payment. |",
+      "| **8** | **Limit to top 3 customers** | `LIMIT 3` (or `FETCH FIRST 3 ROWS ONLY` depending on dialect). |",
+      "| **9** | **Select final columns** | `customer_id, num_orders, avg_payment, lifespan_weeks`. |",
+      "",
+      "**Summary of the Logical Flow**",
+      "",
+      "1. **Source**: `orders` table.  ",
+      "2. **Group**: by `customer_id`.  ",
+      "3. **Aggregations**: count orders, average payment, min/max purchase timestamps.  ",
+      "4. **Compute lifespan**: difference in days \u2192 weeks \u2192 apply minimum\u20111\u2011week rule.  ",
+      "5. **Sort**: descending by average payment.  ",
+      "6. **Limit**: top 3 rows.  ",
+      "",
+      "This plan can be translated into a single SQL statement once the exact date\u2011difference function and column names (e.g., `order_amount`) are confirmed."
+    ]
+  },
+  "candidates": [
+    "SELECT customer_id, COUNT(*) AS num_orders, AVG(order_amount) AS avg_payment, CASE WHEN (DATEDIFF(day, MIN(order_purchase_timestamp), MAX(order_purchase_timestamp)) / 7.0) < 7 THEN 1.0 ELSE (DATEDIFF(day, MIN(order_purchase_timestamp), MAX(order_purchase_timestamp)) / 7.0) END AS lifespan_weeks FROM orders GROUP BY customer_id ORDER BY avg_payment DESC LIMIT 3; ",
+    "SELECT customer_id, COUNT(*) AS num_orders, AVG(order_amount) AS avg_payment, CASE WHEN (DATEDIFF(day, MIN(order_purchase_timestamp), MAX(order_purchase_timestamp)) / 7.0) < 7 THEN 1.0 ELSE (DATEDIFF(day, MIN(order_purchase_timestamp), MAX(order_purchase_timestamp)) / 7.0) END AS lifespan_weeks FROM orders GROUP BY customer_id ORDER BY avg_payment DESC FETCH FIRST 3 ROWS ONLY;  WITH agg AS (",
+    "SELECT customer_id, COUNT(*) AS num_orders, AVG(order_amount) AS avg_payment, MIN(order_purchase_timestamp) AS first_date, MAX(order_purchase_timestamp) AS last_date FROM orders GROUP BY customer_id )",
+    "SELECT customer_id, num_orders, avg_payment, CASE WHEN (DATEDIFF(day, first_date, last_date) / 7.0) < 7 THEN 1.0 ELSE (DATEDIFF(day, first_date, last_date) / 7.0) END AS lifespan_weeks FROM agg ORDER BY avg_payment DESC LIMIT 3; ",
+    "SELECT a.customer_id, a.num_orders, a.avg_payment, CASE WHEN (DATEDIFF(day, a.first_date, a.last_date) / 7.0) < 7 THEN 1.0 ELSE (DATEDIFF(day, a.first_date, a.last"
+  ],
+  "candidate_confidence": [],
+  "validation_results": [
+    {
+      "sql": "SELECT customer_id, COUNT(*) AS num_orders, AVG(order_amount) AS avg_payment, CASE WHEN (DATEDIFF(day, MIN(order_purchase_timestamp), MAX(order_purchase_timestamp)) / 7.0) < 7 THEN 1.0 ELSE (DATEDIFF(day, MIN(order_purchase_timestamp), MAX(order_purchase_timestamp)) / 7.0) END AS lifespan_weeks FROM orders GROUP BY customer_id ORDER BY avg_payment DESC LIMIT 3; ",
+      "valid": false,
+      "error": "Execution error: no such column: order_amount",
+      "execution_preview": []
+    },
+    {
+      "sql": "SELECT o.order_id,",
+      "valid": false,
+      "error": "Execution error: incomplete input",
+      "execution_preview": []
+    },
+    {
+      "sql": "SELECT customer_id, COUNT(*) AS num_orders, AVG(order_amount) AS avg_payment, CASE WHEN (DATEDIFF(day, MIN(order_purchase_timestamp), MAX(order_purchase_timestamp)) / 7.0) < 7 THEN 1.0 ELSE (DATEDIFF(day, MIN(order_purchase_timestamp), MAX(order_purchase_timestamp)) / 7.0) END AS lifespan_weeks FROM orders GROUP BY customer_id ORDER BY avg_payment DESC FETCH FIRST 3 ROWS ONLY;  WITH agg AS (",
+      "valid": false,
+      "error": "Execution error: near \"FETCH\": syntax error",
+      "execution_preview": []
+    },
+    {
+      "sql": "SELECT o.customer_id,",
+      "valid": false,
+      "error": "Execution error: incomplete input",
+      "execution_preview": []
+    },
+    {
+      "sql": "SELECT customer_id, COUNT(*) AS num_orders, AVG(order_amount) AS avg_payment, MIN(order_purchase_timestamp) AS first_date, MAX(order_purchase_timestamp) AS last_date FROM orders GROUP BY customer_id )",
+      "valid": false,
+      "error": "Execution error: near \")\": syntax error",
+      "execution_preview": []
+    },
+    {
+      "sql": "SELECT customer_id, num_orders, avg_payment, CASE WHEN (DATEDIFF(day, first_date, last_date) / 7.0) < 7 THEN 1.0 ELSE (DATEDIFF(day, first_date, last_date) / 7.0) END AS lifespan_weeks FROM agg ORDER BY avg_payment DESC LIMIT 3; ",
+      "valid": false,
+      "error": "Table 'agg' not found in schema",
+      "execution_preview": []
+    },
+    {
+      "sql": "SELECT a.customer_id, a.num_orders, a.avg_payment, CASE WHEN (DATEDIFF(day, a.first_date, a.last_date) / 7.0) < 7 THEN 1.0 ELSE (DATEDIFF(day, a.first_date, a.last",
+      "valid": false,
+      "error": "Execution error: incomplete input",
+      "execution_preview": []
+    }
+  ],
+  "best_valid_sql": null,
+  "repair_attempts": 2,
+  "repaired_sql": "SELECT o.customer_id,",
+  "final_sql": null,
+  "execution_result": {
+    "ok": false,
+    "error": "No valid SQL"
+  },
+  "logs": [
+    {
+      "timestamp": "2026-04-09T08:12:46.983827",
+      "stage": "start",
+      "message": "Text-to-SQL workflow started",
+      "data": {}
+    },
+    {
+      "timestamp": "2026-04-09T08:12:46.983984",
+      "stage": "normalize",
+      "message": "Input normalized",
+      "data": {
+        "original_len": 354,
+        "normalized_len": 354
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:12:46.992363",
+      "stage": "grast_sql.schema_enricher",
+      "message": "Built enriched schema and FD-style graph",
+      "data": {
+        "num_tables": 11,
+        "num_columns": 70,
+        "num_graph_edges": 124
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:12:46.995077",
+      "stage": "grast_sql.query_aware_column_encoder",
+      "message": "Computed query-aware column relevance scores",
+      "data": {
+        "top_candidates": [
+          {
+            "column": "orders.order_delivered_customer_date",
+            "score": 39.5
+          },
+          {
+            "column": "order_items.shipping_limit_date",
+            "score": 34.0
+          },
+          {
+            "column": "order_payments.payment_installments",
+            "score": 34.0
+          },
+          {
+            "column": "orders.order_purchase_timestamp",
+            "score": 31.5
+          },
+          {
+            "column": "orders.customer_id",
+            "score": 29.45
+          },
+          {
+            "column": "order_payments.payment_sequential",
+            "score": 28.0
+          },
+          {
+            "column": "leads_qualified.landing_page_id",
+            "score": 27.25
+          },
+          {
+            "column": "orders.order_delivered_carrier_date",
+            "score": 26.5
+          }
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:12:48.543545",
+      "stage": "grast_sql.graph_based_reranker",
+      "message": "Reranked top columns with structural priors",
+      "data": {
+        "input_candidates": [
+          "orders.order_delivered_customer_date",
+          "order_items.shipping_limit_date",
+          "order_payments.payment_installments",
+          "orders.order_purchase_timestamp",
+          "orders.customer_id",
+          "order_payments.payment_sequential",
+          "leads_qualified.landing_page_id",
+          "orders.order_delivered_carrier_date"
+        ],
+        "reranked_candidates": [
+          "orders.customer_id",
+          "orders.order_purchase_timestamp"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:12:48.543706",
+      "stage": "grast_sql.steiner_tree_spanner",
+      "message": "Expanded selected columns to preserve join connectivity",
+      "data": {
+        "selected_columns": [
+          "orders.customer_id",
+          "orders.order_purchase_timestamp"
+        ],
+        "connected_columns": [
+          "orders.customer_id",
+          "orders.order_id",
+          "orders.order_purchase_timestamp"
+        ],
+        "added_columns": [
+          "orders.order_id"
+        ],
+        "max_hops": 2
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:12:48.543880",
+      "stage": "schema_search",
+      "message": "Schema context retrieved",
+      "data": {
+        "tables": [
+          "orders"
+        ],
+        "selected_columns": [
+          "orders.customer_id",
+          "orders.order_purchase_timestamp"
+        ],
+        "connected_columns": [
+          "orders.customer_id",
+          "orders.order_id",
+          "orders.order_purchase_timestamp"
+        ],
+        "join_paths": []
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:12:48.544302",
+      "stage": "value_search",
+      "message": "Value context retrieved",
+      "data": {
+        "num_tables_sampled": 1
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:12:51.113338",
+      "stage": "plan_sql",
+      "message": "SQL plan created",
+      "data": {
+        "raw_plan": "**Step\u2011by\u2011Step Plan for the Query**\n\n| # | What to do | Why / How |\n|---|------------|-----------|\n| **1** | **Select the source table** | Use only the `orders` table (no joins needed). |\n| **2** | **Group by customer** | `GROUP BY customer_id` to aggregate per customer. |\n| **3** | **Compute basic aggregates** | - `COUNT(*) AS num_orders` \u2013 total orders per customer.<br>- `AVG(order_amount) AS avg_payment` \u2013 average payment per order (assumes a numeric column `order_amount` exists). |\n| **4** | **Determine first & last purchase dates** | - `MIN(order_purchase_timestamp) AS first_date`.<br>- `MAX(order_purchase_timestamp) AS last_date`. |\n| **5** | **Calculate raw lifespan in weeks** | `DATEDIFF(day, first_date, last_date) / 7.0 AS raw_lifespan_weeks`. (Use the appropriate date\u2011difference function for your SQL dialect.) |\n| **6** | **Apply the \u201cminimum 1 week\u201d rule** | `CASE WHEN raw_lifespan_weeks < 7 THEN 1.0 ELSE raw_lifespan_weeks END AS lifespan_weeks`. |\n| **7** | **Order the results** | `ORDER BY avg_payment DESC` to rank customers by highest average payment. |\n| **8** | **Limit to top 3 customers** | `LIMIT 3` (or `FETCH FIRST 3 ROWS ONLY` depending on dialect). |\n| **9** | **Select final columns** | `customer_id, num_orders, avg_payment, lifespan_weeks`. |\n\n**Summary of the Logical Flow**\n\n1. **Source**: `orders` table.  \n2. **Group**: by `customer_id`.  \n3. **Aggregations**: count orders, average payment, min/max purchase timestamps.  \n4. **Compute lifespan**: difference in days \u2192 weeks \u2192 apply minimum\u20111\u2011week rule.  \n5. **Sort**: descending by average payment.  \n6. **Limit**: top 3 rows.  \n\nThis plan can be translated into a single SQL statement once the exact date\u2011difference function and column names (e.g., `order_amount`) are confirmed.",
+        "steps": [
+          "**Step\u2011by\u2011Step Plan for the Query**",
+          "",
+          "| # | What to do | Why / How |",
+          "|---|------------|-----------|",
+          "| **1** | **Select the source table** | Use only the `orders` table (no joins needed). |",
+          "| **2** | **Group by customer** | `GROUP BY customer_id` to aggregate per customer. |",
+          "| **3** | **Compute basic aggregates** | - `COUNT(*) AS num_orders` \u2013 total orders per customer.<br>- `AVG(order_amount) AS avg_payment` \u2013 average payment per order (assumes a numeric column `order_amount` exists). |",
+          "| **4** | **Determine first & last purchase dates** | - `MIN(order_purchase_timestamp) AS first_date`.<br>- `MAX(order_purchase_timestamp) AS last_date`. |",
+          "| **5** | **Calculate raw lifespan in weeks** | `DATEDIFF(day, first_date, last_date) / 7.0 AS raw_lifespan_weeks`. (Use the appropriate date\u2011difference function for your SQL dialect.) |",
+          "| **6** | **Apply the \u201cminimum 1 week\u201d rule** | `CASE WHEN raw_lifespan_weeks < 7 THEN 1.0 ELSE raw_lifespan_weeks END AS lifespan_weeks`. |",
+          "| **7** | **Order the results** | `ORDER BY avg_payment DESC` to rank customers by highest average payment. |",
+          "| **8** | **Limit to top 3 customers** | `LIMIT 3` (or `FETCH FIRST 3 ROWS ONLY` depending on dialect). |",
+          "| **9** | **Select final columns** | `customer_id, num_orders, avg_payment, lifespan_weeks`. |",
+          "",
+          "**Summary of the Logical Flow**",
+          "",
+          "1. **Source**: `orders` table.  ",
+          "2. **Group**: by `customer_id`.  ",
+          "3. **Aggregations**: count orders, average payment, min/max purchase timestamps.  ",
+          "4. **Compute lifespan**: difference in days \u2192 weeks \u2192 apply minimum\u20111\u2011week rule.  ",
+          "5. **Sort**: descending by average payment.  ",
+          "6. **Limit**: top 3 rows.  ",
+          "",
+          "This plan can be translated into a single SQL statement once the exact date\u2011difference function and column names (e.g., `order_amount`) are confirmed."
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:12:53.959939",
+      "stage": "generate_sql",
+      "message": "Generated 5 candidates",
+      "data": {
+        "num_candidates": 5
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:12:53.960751",
+      "stage": "validate_sql",
+      "message": "Execution failed",
+      "data": {
+        "error": "no such column: order_amount"
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:13:33.068090",
+      "stage": "repair_sql",
+      "message": "SQL repaired",
+      "data": {
+        "original_error": "Execution error: no such column: order_amount",
+        "attempts": 1
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:13:33.068360",
+      "stage": "validate_sql",
+      "message": "Execution failed",
+      "data": {
+        "error": "incomplete input"
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:13:33.068871",
+      "stage": "validate_sql",
+      "message": "Execution failed",
+      "data": {
+        "error": "near \"FETCH\": syntax error"
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:14:18.356279",
+      "stage": "repair_sql",
+      "message": "SQL repaired",
+      "data": {
+        "original_error": "Execution error: near \"FETCH\": syntax error",
+        "attempts": 2
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:14:18.356926",
+      "stage": "validate_sql",
+      "message": "Execution failed",
+      "data": {
+        "error": "incomplete input"
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:14:18.357950",
+      "stage": "validate_sql",
+      "message": "Execution failed",
+      "data": {
+        "error": "near \")\": syntax error"
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:14:18.358576",
+      "stage": "validate_sql",
+      "message": "Syntax check failed",
+      "data": {
+        "error": "Table 'agg' not found in schema"
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:14:18.359472",
+      "stage": "validate_sql",
+      "message": "Execution failed",
+      "data": {
+        "error": "incomplete input"
+      }
+    },
+    {
+      "timestamp": "2026-04-09T08:14:18.359506",
+      "stage": "error",
+      "message": "Failed to find or generate valid SQL",
+      "data": {}
+    },
+    {
+      "timestamp": "2026-04-09T08:14:18.359785",
+      "stage": "error",
+      "message": "No valid SQL to execute",
+      "data": {}
+    },
+    {
+      "timestamp": "2026-04-09T08:14:18.359816",
+      "stage": "complete",
+      "message": "Workflow completed successfully",
+      "data": {}
+    }
+  ],
+  "errors": [
+    "Failed to find or generate valid SQL",
+    "No valid SQL to execute"
+  ],
+  "timestamp": "2026-04-09T08:12:46.983812"
+}
