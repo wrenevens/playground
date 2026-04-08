@@ -6,6 +6,7 @@ Each tool focuses on one specific task in the workflow.
 import logging
 import json
 import re
+from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple
 from .llm_provider import call_llm
 from .prompts import (
@@ -15,6 +16,13 @@ from .prompts import (
 from .state import Text2SQLState
 from ..db.schema_loader import SchemaLoader
 from ..db.connector import DatabaseConnector
+from ..configs.default import (
+    SCHEMA_TOP_K_TABLES,
+    SCHEMA_TOP_K_COLUMNS,
+    SCHEMA_RERANK_CANDIDATES,
+    SCHEMA_GRAPH_HOPS,
+    SCHEMA_SAMPLE_ROW_LIMIT,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -39,35 +47,62 @@ class ToolSet:
     def schema_search(self, state: Text2SQLState) -> Dict[str, Any]:
         """
         Find relevant tables and columns for the question.
-        Uses LLM to understand which schema elements are needed.
+        Uses query-aware ranking plus graph connectivity to keep join keys.
         """
         logger.info(f"Schema search for: {state.question}")
         
-        schema_str = self.schema_loader.get_full_schema_string()
-        
-        prompt = f"""Question: {state.question}
+        enriched_schema = self.schema_loader.build_enriched_schema(
+            question=state.normalized_question or state.question,
+            sample_limit=SCHEMA_SAMPLE_ROW_LIMIT,
+        )
 
-{schema_str}
+        scored_columns = self._rank_columns(state.question, enriched_schema.get("columns", []))
+        rerank_candidates = scored_columns[:SCHEMA_RERANK_CANDIDATES]
+        reranked_columns = self._llm_rerank_columns(state, rerank_candidates) or rerank_candidates
+        selected_columns = reranked_columns[:SCHEMA_TOP_K_COLUMNS]
 
-Identify the most relevant tables and columns from the above schema that are needed to answer this question."""
-        
-        response = call_llm(SCHEMA_SEARCH_PROMPT, prompt, provider=self.llm_provider, model=self.llm_model)
-        
-        if not response:
-            state.add_error("Schema search failed")
-            return {}
-        
-        # Parse response to extract tables and columns
+        selected_column_names = [column["qualified_name"] for column in selected_columns]
+        connected_column_names = self.schema_loader.get_connected_columns(
+            selected_column_names,
+            max_hops=SCHEMA_GRAPH_HOPS,
+        )
+
+        column_records = self._resolve_column_records(
+            connected_column_names,
+            enriched_schema,
+        )
+        selected_tables = self._rank_tables_from_columns(column_records)
+        table_names = [table["table"] for table in selected_tables[:SCHEMA_TOP_K_TABLES]]
+
+        compact_schema = self._build_compact_schema_text(selected_tables, column_records)
+        join_paths = self._build_join_paths(column_records, enriched_schema.get("graph", {}))
+
         schema_context = {
-            "raw_response": response,
-            "tables": self._extract_table_names(response),
-            "columns": self._extract_column_names(response),
-            "notes": []
+            "tables": table_names,
+            "selected_tables": selected_tables[:SCHEMA_TOP_K_TABLES],
+            "columns": column_records,
+            "selected_columns": selected_columns,
+            "graph": enriched_schema.get("graph", {}),
+            "join_paths": join_paths,
+            "compact_schema": compact_schema,
+            "notes": [
+                "Columns ranked by query relevance and boosted by schema structure.",
+                "Key columns were retained to preserve valid join paths.",
+            ],
         }
-        
+
         state.schema_context = schema_context
-        state.add_log("schema_search", "Schema context retrieved", schema_context)
-        
+        state.add_log(
+            "schema_search",
+            "Schema context retrieved",
+            {
+                "tables": table_names,
+                "selected_columns": selected_column_names,
+                "connected_columns": connected_column_names,
+                "join_paths": join_paths,
+            },
+        )
+
         return schema_context
     
     # ===== TOOL 2: Value Search =====
@@ -119,7 +154,7 @@ Identify the most relevant tables and columns from the above schema that are nee
         """
         logger.info("SQL planning")
         
-        schema_info = f"Relevant tables: {', '.join(state.schema_context.get('tables', []))}"
+        schema_info = state.schema_context.get("compact_schema") or f"Relevant tables: {', '.join(state.schema_context.get('tables', []))}"
         
         prompt = f"""Question: {state.question}
 
@@ -156,7 +191,7 @@ Create a step-by-step plan to generate the SQL query. Include:
         """
         logger.info(f"SQL generation ({num_candidates} candidates)")
         
-        schema_str = self.schema_loader.get_full_schema_string()
+        schema_str = state.schema_context.get("compact_schema") or self.schema_loader.get_full_schema_string()
         plan_str = "\n".join(state.plan.get("steps", []))
         
         prompt = f"""Question: {state.question}
@@ -283,6 +318,181 @@ Only return SQL, no explanations."""
         return execution_result
     
     # ===== Helper methods =====
+
+    def _rank_columns(self, question: str, columns: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Score columns by lexical relevance, descriptions, and structural importance."""
+        question_tokens = self._tokenize_text(question)
+        ranked = []
+
+        for column in columns:
+            score = float(column.get("score", 0.0))
+            evidence = []
+            table_name = column.get("table", "")
+            column_name = column.get("column", "")
+            description = column.get("description", "")
+            sample_values = " ".join(column.get("sample_values", []))
+            search_space = f"{table_name} {column_name} {description} {sample_values}".lower()
+
+            for token in question_tokens:
+                if token in column_name.lower():
+                    score += 4.0
+                    evidence.append(f"column:{token}")
+                elif token in table_name.lower():
+                    score += 2.5
+                    evidence.append(f"table:{token}")
+                elif token in search_space:
+                    score += 1.0
+                    evidence.append(f"text:{token}")
+
+            if column.get("is_primary_key"):
+                score += 1.5
+            if column.get("is_foreign_key"):
+                score += 1.2
+            if column.get("key_type") == "table_key":
+                score += 0.75
+
+            ranked.append({**column, "score": score, "evidence": sorted(set(evidence))})
+
+        return sorted(ranked, key=lambda item: item["score"], reverse=True)
+
+    def _llm_rerank_columns(self, state: Text2SQLState, candidates: List[Dict[str, Any]]) -> Optional[List[Dict[str, Any]]]:
+        """Ask the LLM to rerank the top candidates while preserving structure-aware candidates."""
+        if not candidates:
+            return None
+
+        payload = [
+            {
+                "qualified_name": column["qualified_name"],
+                "description": column.get("description", ""),
+                "sample_values": column.get("sample_values", []),
+                "is_primary_key": column.get("is_primary_key", False),
+                "is_foreign_key": column.get("is_foreign_key", False),
+                "score": column.get("score", 0.0),
+            }
+            for column in candidates
+        ]
+
+        prompt = f"""Question: {state.question}
+
+Candidate columns:
+{json.dumps(payload, indent=2)}
+
+Return JSON only in this format:
+{{
+  "ranked_columns": ["table.column", "table.column", ...]
+}}
+
+Keep key columns that are required for valid joins even if they are not lexically obvious."""
+
+        response = call_llm(SCHEMA_SEARCH_PROMPT, prompt, provider=self.llm_provider, model=self.llm_model)
+        if not response:
+            return None
+
+        parsed = self._extract_json_object(response)
+        if not parsed:
+            return None
+
+        ranked_names = parsed.get("ranked_columns") or parsed.get("columns")
+        if not isinstance(ranked_names, list):
+            return None
+
+        candidate_map = {column["qualified_name"]: column for column in candidates}
+        reranked = [candidate_map[name] for name in ranked_names if name in candidate_map]
+        return reranked or None
+
+    def _resolve_column_records(self, qualified_names: List[str], enriched_schema: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Map qualified column names back to their enriched column records."""
+        candidate_map = {column["qualified_name"]: column for column in enriched_schema.get("columns", [])}
+        resolved = []
+        for qualified_name in qualified_names:
+            column = candidate_map.get(qualified_name)
+            if column:
+                resolved.append(column)
+        return resolved
+
+    def _rank_tables_from_columns(self, columns: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Aggregate column scores into table scores."""
+        table_scores = defaultdict(lambda: {"table": "", "score": 0.0, "columns": []})
+        for column in columns:
+            table_name = column.get("table", "")
+            entry = table_scores[table_name]
+            entry["table"] = table_name
+            entry["score"] = max(entry["score"], float(column.get("score", 0.0)))
+            entry["columns"].append(column)
+
+        return sorted(table_scores.values(), key=lambda item: item["score"], reverse=True)
+
+    def _build_compact_schema_text(self, tables: List[Dict[str, Any]], columns: List[Dict[str, Any]]) -> str:
+        """Build a compact schema snippet for planning and generation prompts."""
+        lines = ["RELEVANT SCHEMA:"]
+        table_to_columns: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+        for column in columns:
+            table_to_columns[column.get("table", "")].append(column)
+
+        for table in tables:
+            table_name = table.get("table", "")
+            lines.append(f"Table: {table_name}")
+            relevant_columns = sorted(
+                table_to_columns.get(table_name, []),
+                key=lambda item: item.get("score", 0.0),
+                reverse=True,
+            )
+            for column in relevant_columns:
+                flags = []
+                if column.get("is_primary_key"):
+                    flags.append("PK")
+                if column.get("is_foreign_key"):
+                    flags.append("FK")
+                flag_text = f" [{', '.join(flags)}]" if flags else ""
+                sample_values = column.get("sample_values", [])
+                sample_text = f" Sample: {', '.join(sample_values[:3])}." if sample_values else ""
+                lines.append(
+                    f"  - {column.get('column')} ({column.get('type', '')}){flag_text}: {column.get('description', '')}{sample_text}"
+                )
+            lines.append("")
+
+        return "\n".join(lines).strip()
+
+    def _build_join_paths(self, columns: List[Dict[str, Any]], graph: Dict[str, Any]) -> List[str]:
+        """Summarize likely join paths from the selected columns and graph edges."""
+        edges = graph.get("edges", [])
+        involved_tables = {column.get("table") for column in columns if column.get("table")}
+        join_clauses = []
+
+        for edge in edges:
+            source_table = edge["source"].split(".", 1)[0]
+            target_table = edge["target"].split(".", 1)[0]
+            if source_table in involved_tables and target_table in involved_tables and source_table != target_table:
+                join_clauses.append(f"{edge['source']} -> {edge['target']} ({edge['type']})")
+
+        return sorted(set(join_clauses))
+
+    def _extract_json_object(self, text: str) -> Optional[Dict[str, Any]]:
+        """Extract a JSON object from model output, even if wrapped in markdown fences."""
+        candidates = []
+        stripped = text.strip()
+
+        if stripped.startswith("{") and stripped.endswith("}"):
+            candidates.append(stripped)
+
+        fence_match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL | re.IGNORECASE)
+        if fence_match:
+            candidates.append(fence_match.group(1))
+
+        brace_match = re.search(r"\{.*\}", text, re.DOTALL)
+        if brace_match:
+            candidates.append(brace_match.group(0))
+
+        for candidate in candidates:
+            try:
+                return json.loads(candidate)
+            except Exception:
+                continue
+        return None
+
+    def _tokenize_text(self, text: str) -> List[str]:
+        """Tokenize text into useful lowercase query terms."""
+        return [token for token in re.findall(r"[a-z0-9_]+", text.lower()) if len(token) > 1]
     
     def _extract_table_names(self, text: str) -> List[str]:
         """Extract table names from LLM response."""

@@ -176,7 +176,7 @@ def get_llm(provider: str = "openai", model: Optional[str] = None) -> LLMProvide
     
     Example:
         llm = get_llm("openai", "gpt-4")
-        llm = get_llm("groq", "openai/gpt-oss-120b")
+        llm = get_llm("groq", DEFAULT_GROQ_MODEL)
     """
     provider = provider.lower()
 
