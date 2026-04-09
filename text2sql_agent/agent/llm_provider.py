@@ -58,31 +58,31 @@ class LLMProvider(ABC):
     Abstract base class for LLM calls.
     Implement this to add new providers (OpenAI, Groq, Anthropic, local, etc.)
     """
-    
+
     def __init__(self, model: str, temperature: float = 0.3):
         self.model = model
         self.temperature = temperature
         self.client = None
-    
+
     @abstractmethod
     def initialize(self):
         """Initialize the LLM client."""
         pass
-    
+
     @abstractmethod
     def call(self, system_prompt: str, user_message: str) -> Optional[str]:
         """
         Call the LLM with a system prompt and user message.
-        
+
         Args:
             system_prompt: System instructions for the LLM
             user_message: The actual query/prompt
-        
+
         Returns:
             LLM response text, or None on error
         """
         pass
-    
+
     @abstractmethod
     def call_with_metrics(
         self,
@@ -92,12 +92,12 @@ class LLMProvider(ABC):
     ) -> Tuple[Optional[str], Dict[str, Any]]:
         """
         Call the LLM and return both response and usage metrics.
-        
+
         Args:
             system_prompt: System instructions for the LLM
             user_message: The actual query/prompt
             stage: Stage name for logging (e.g., "schema_search", "generate_sql")
-        
+
         Returns:
             Tuple of (response_text, metrics_dict)
         """
@@ -106,10 +106,10 @@ class LLMProvider(ABC):
 
 class OpenAIProvider(LLMProvider):
     """OpenAI LLM provider (GPT-3.5, GPT-4, etc.)"""
-    
+
     def __init__(self, model: str = DEFAULT_OPENAI_MODEL, temperature: float = 0.3):
         super().__init__(model, temperature)
-    
+
     def initialize(self):
         """Initialize OpenAI client."""
         try:
@@ -117,14 +117,15 @@ class OpenAIProvider(LLMProvider):
             self.client = OpenAI()
             logger.info(f"Initialized OpenAI client with model: {self.model}")
         except ImportError:
-            logger.error("OpenAI client not available. Install: pip install openai")
+            logger.error(
+                "OpenAI client not available. Install: pip install openai")
             raise
-    
+
     def call(self, system_prompt: str, user_message: str) -> Optional[str]:
         """Call OpenAI API."""
         if not self.client:
             self.initialize()
-        
+
         try:
             response = self.client.chat.completions.create(
                 model=self.model,
@@ -138,7 +139,7 @@ class OpenAIProvider(LLMProvider):
         except Exception as e:
             logger.error(f"OpenAI call failed: {e}")
             return None
-    
+
     def call_with_metrics(
         self,
         system_prompt: str,
@@ -148,12 +149,12 @@ class OpenAIProvider(LLMProvider):
         """Call OpenAI API and capture metrics."""
         if not self.client:
             self.initialize()
-        
+
         call_id = str(uuid.uuid4())
         start_time = time.time()
         response_text = None
         metrics = {}
-        
+
         try:
             response = self.client.chat.completions.create(
                 model=self.model,
@@ -164,20 +165,20 @@ class OpenAIProvider(LLMProvider):
                 ]
             )
             response_text = response.choices[0].message.content
-            
+
             # Extract token usage
             prompt_tokens = response.usage.prompt_tokens
             completion_tokens = response.usage.completion_tokens
             total_tokens = response.usage.total_tokens
-            
+
             # Calculate cost
             input_cost, output_cost, total_cost = calculate_cost(
                 self.model, prompt_tokens, completion_tokens
             )
-            
+
             end_time = time.time()
             latency_ms = (end_time - start_time) * 1000
-            
+
             # Create metrics object
             call_metrics = LLMCallMetrics(
                 call_id=call_id,
@@ -191,8 +192,8 @@ class OpenAIProvider(LLMProvider):
                 total_tokens=total_tokens,
                 prompt_length=len(system_prompt + user_message),
                 response_length=len(response_text) if response_text else 0,
-                prompt_text=(system_prompt + user_message)[:300],
-                response_text=response_text[:300] if response_text else None,
+                prompt_text=(system_prompt + user_message),
+                response_text=response_text if response_text else None,
                 input_cost=input_cost,
                 output_cost=output_cost,
                 total_cost=total_cost,
@@ -200,13 +201,13 @@ class OpenAIProvider(LLMProvider):
                 success=True,
                 latency_ms=latency_ms,
             )
-            
+
             metrics = call_metrics.to_dict()
-            
+
         except Exception as e:
             end_time = time.time()
             logger.error(f"OpenAI call failed: {e}")
-            
+
             call_metrics = LLMCallMetrics(
                 call_id=call_id,
                 stage=stage,
@@ -220,16 +221,16 @@ class OpenAIProvider(LLMProvider):
                 latency_ms=(end_time - start_time) * 1000,
             )
             metrics = call_metrics.to_dict()
-        
+
         return response_text, metrics
 
 
 class GroqProvider(LLMProvider):
     """Groq LLM provider (fast inference)"""
-    
+
     def __init__(self, model: str = DEFAULT_GROQ_MODEL, temperature: float = 0.3):
         super().__init__(model, temperature)
-    
+
     def initialize(self):
         """Initialize Groq client."""
         try:
@@ -237,14 +238,15 @@ class GroqProvider(LLMProvider):
             self.client = Groq()
             logger.info(f"Initialized Groq client with model: {self.model}")
         except ImportError:
-            logger.error("Groq client not available. Install: pip install groq")
+            logger.error(
+                "Groq client not available. Install: pip install groq")
             raise
-    
+
     def call(self, system_prompt: str, user_message: str) -> Optional[str]:
         """Call Groq API."""
         if not self.client:
             self.initialize()
-        
+
         try:
             response = self.client.chat.completions.create(
                 model=self.model,
@@ -264,7 +266,7 @@ class GroqProvider(LLMProvider):
                     f"Current fallback default: {DEFAULT_GROQ_MODEL}"
                 )
             return None
-    
+
     def call_with_metrics(
         self,
         system_prompt: str,
@@ -274,12 +276,12 @@ class GroqProvider(LLMProvider):
         """Call Groq API and capture metrics."""
         if not self.client:
             self.initialize()
-        
+
         call_id = str(uuid.uuid4())
         start_time = time.time()
         response_text = None
         metrics = {}
-        
+
         try:
             response = self.client.chat.completions.create(
                 model=self.model,
@@ -290,20 +292,20 @@ class GroqProvider(LLMProvider):
                 ]
             )
             response_text = response.choices[0].message.content
-            
+
             # Extract token usage
             prompt_tokens = response.usage.prompt_tokens
             completion_tokens = response.usage.completion_tokens
             total_tokens = response.usage.total_tokens
-            
+
             # Calculate cost
             input_cost, output_cost, total_cost = calculate_cost(
                 self.model, prompt_tokens, completion_tokens
             )
-            
+
             end_time = time.time()
             latency_ms = (end_time - start_time) * 1000
-            
+
             # Create metrics object
             call_metrics = LLMCallMetrics(
                 call_id=call_id,
@@ -317,8 +319,8 @@ class GroqProvider(LLMProvider):
                 total_tokens=total_tokens,
                 prompt_length=len(system_prompt + user_message),
                 response_length=len(response_text) if response_text else 0,
-                prompt_text=(system_prompt + user_message)[:300],
-                response_text=response_text[:300] if response_text else None,
+                prompt_text=(system_prompt + user_message),
+                response_text=response_text if response_text else None,
                 input_cost=input_cost,
                 output_cost=output_cost,
                 total_cost=total_cost,
@@ -326,21 +328,21 @@ class GroqProvider(LLMProvider):
                 success=True,
                 latency_ms=latency_ms,
             )
-            
+
             metrics = call_metrics.to_dict()
-            
+
         except Exception as e:
             error_text = str(e)
             end_time = time.time()
-            
+
             if "decommission" in error_text.lower() or "model_decommissioned" in error_text.lower():
                 logger.error(
                     "Configured Groq model appears deprecated. Set GROQ_MODEL or pass --llm-model. "
                     f"Current fallback default: {DEFAULT_GROQ_MODEL}"
                 )
-            
+
             logger.error(f"Groq call failed: {error_text}")
-            
+
             call_metrics = LLMCallMetrics(
                 call_id=call_id,
                 stage=stage,
@@ -354,7 +356,7 @@ class GroqProvider(LLMProvider):
                 latency_ms=(end_time - start_time) * 1000,
             )
             metrics = call_metrics.to_dict()
-        
+
         return response_text, metrics
 
 
@@ -365,14 +367,14 @@ _llm_instances = {}
 def get_llm(provider: str = "openai", model: Optional[str] = None) -> LLMProvider:
     """
     Get or create a global LLM instance.
-    
+
     Args:
         provider: "openai" or "groq"
         model: Specific model name (uses defaults if None)
-    
+
     Returns:
         LLMProvider instance
-    
+
     Example:
         llm = get_llm("openai", "gpt-4")
         llm = get_llm("groq", DEFAULT_GROQ_MODEL)
@@ -380,18 +382,18 @@ def get_llm(provider: str = "openai", model: Optional[str] = None) -> LLMProvide
     provider = provider.lower()
 
     model = resolve_model(provider=provider, model=model)
-    
+
     # Use model as key for instance caching
     cache_key = f"{provider}:{model}"
-    
+
     if cache_key not in _llm_instances:
         if provider == "openai":
             _llm_instances[cache_key] = OpenAIProvider(model=model)
         elif provider == "groq":
             _llm_instances[cache_key] = GroqProvider(model=model)
-        
+
         _llm_instances[cache_key].initialize()
-    
+
     return _llm_instances[cache_key]
 
 
@@ -403,16 +405,16 @@ def call_llm(
 ) -> Optional[str]:
     """
     Convenience function to call the LLM.
-    
+
     Args:
         system_prompt: System instructions
         user_message: User query
         provider: "openai" or "groq"
         model: Specific model (uses default if None)
-    
+
     Returns:
         LLM response or None on error
-    
+
     Example:
         response = call_llm(system, user, provider="groq")
         response = call_llm(system, user, provider="openai", model="gpt-4")
@@ -430,14 +432,14 @@ def call_llm_with_metrics(
 ) -> Tuple[Optional[str], Dict[str, Any]]:
     """
     Convenience function to call the LLM with metrics tracking.
-    
+
     Args:
         system_prompt: System instructions
         user_message: User query
         provider: "openai" or "groq"
         model: Specific model (uses default if None)
         stage: Stage name for logging (e.g., "schema_search", "generate_sql")
-    
+
     Returns:
         Tuple of (response, metrics_dict) where metrics_dict contains:
         - call_id: Unique identifier
@@ -452,7 +454,7 @@ def call_llm_with_metrics(
         - success: Whether the call succeeded
         - error: Error message (if any)
         - And many more detailed metrics...
-    
+
     Example:
         response, metrics = call_llm_with_metrics(
             system, user, provider="groq", stage="schema_search"

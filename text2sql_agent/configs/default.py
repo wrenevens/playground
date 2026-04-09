@@ -18,7 +18,7 @@ SCHEMA_SAMPLE_ROW_LIMIT = 3
 # Workflow Configuration
 MAX_GENERATION_ATTEMPTS = 3
 MAX_REPAIR_ATTEMPTS = 2
-MAX_CANDIDATES = 5
+MAX_CANDIDATES = 1
 
 # Database Configuration (defaults)
 DEFAULT_DB_TYPE = "sqlite"
