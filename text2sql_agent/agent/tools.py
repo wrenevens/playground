@@ -8,7 +8,7 @@ import json
 import re
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple
-from .llm_provider import call_llm
+from .llm_provider import call_llm, call_llm_with_metrics
 from .prompts import (
     SCHEMA_SEARCH_PROMPT, PLAN_SQL_PROMPT, GENERATE_SQL_PROMPT,
     REPAIR_SQL_PROMPT, VALIDATE_PROMPT
@@ -222,7 +222,17 @@ Create a step-by-step plan to generate the SQL query. Include:
 5. Sorting
 6. Limits"""
         
-        response = call_llm(PLAN_SQL_PROMPT, prompt, provider=self.llm_provider, model=self.llm_model)
+        from .llm_metrics import LLMCallMetrics
+        response, metrics = call_llm_with_metrics(
+            PLAN_SQL_PROMPT, prompt, 
+            provider=self.llm_provider, 
+            model=self.llm_model, 
+            stage="plan_sql"
+        )
+        
+        if metrics:
+            call_obj = LLMCallMetrics(**metrics)
+            state.llm_metrics.add_call(call_obj)
         
         if not response:
             state.add_error("SQL planning failed")
@@ -245,6 +255,8 @@ Create a step-by-step plan to generate the SQL query. Include:
         """
         logger.info(f"SQL generation ({num_candidates} candidates)")
         
+        from .llm_metrics import LLMCallMetrics
+        
         schema_str = state.schema_context.get("compact_schema") or self.schema_loader.get_full_schema_string()
         plan_str = "\n".join(state.plan.get("steps", []))
         
@@ -260,7 +272,16 @@ Generate {num_candidates} alternative SQL queries that answer this question.
 Return each query on a separate line starting with 'SELECT'.
 Only return SQL, no explanations."""
         
-        response = call_llm(GENERATE_SQL_PROMPT, prompt, provider=self.llm_provider, model=self.llm_model)
+        response, metrics = call_llm_with_metrics(
+            GENERATE_SQL_PROMPT, prompt, 
+            provider=self.llm_provider, 
+            model=self.llm_model, 
+            stage="generate_sql"
+        )
+        
+        if metrics:
+            call_obj = LLMCallMetrics(**metrics)
+            state.llm_metrics.add_call(call_obj)
         
         if not response:
             state.add_error("SQL generation failed")
@@ -323,6 +344,8 @@ Only return SQL, no explanations."""
         """
         logger.info(f"Attempting SQL repair")
         
+        from .llm_metrics import LLMCallMetrics
+        
         schema_str = self.schema_loader.get_full_schema_string()
         
         repair_prompt = REPAIR_SQL_PROMPT.format(
@@ -332,7 +355,16 @@ Only return SQL, no explanations."""
             schema=schema_str
         )
         
-        response = call_llm(REPAIR_SQL_PROMPT, repair_prompt, provider=self.llm_provider, model=self.llm_model)
+        response, metrics = call_llm_with_metrics(
+            REPAIR_SQL_PROMPT, repair_prompt, 
+            provider=self.llm_provider, 
+            model=self.llm_model, 
+            stage="repair_sql"
+        )
+        
+        if metrics:
+            call_obj = LLMCallMetrics(**metrics)
+            state.llm_metrics.add_call(call_obj)
         
         if not response:
             state.add_error("SQL repair failed")
@@ -414,6 +446,8 @@ Only return SQL, no explanations."""
         if not candidates:
             return None
 
+        from .llm_metrics import LLMCallMetrics
+
         payload = [
             {
                 "qualified_name": column["qualified_name"],
@@ -438,7 +472,17 @@ Return JSON only in this format:
 
 Keep key columns that are required for valid joins even if they are not lexically obvious."""
 
-        response = call_llm(SCHEMA_SEARCH_PROMPT, prompt, provider=self.llm_provider, model=self.llm_model)
+        response, metrics = call_llm_with_metrics(
+            SCHEMA_SEARCH_PROMPT, prompt, 
+            provider=self.llm_provider, 
+            model=self.llm_model, 
+            stage="rerank_columns"
+        )
+        
+        if metrics:
+            call_obj = LLMCallMetrics(**metrics)
+            state.llm_metrics.add_call(call_obj)
+        
         if not response:
             return None
 

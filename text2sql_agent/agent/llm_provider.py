@@ -6,9 +6,12 @@ Supports: OpenAI, Groq, and other providers.
 
 import logging
 import os
-from typing import Any, Optional
+import time
+import uuid
+from typing import Any, Optional, Dict, Tuple
 from abc import ABC, abstractmethod
 
+from .llm_metrics import LLMCallMetrics, calculate_cost
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +82,26 @@ class LLMProvider(ABC):
             LLM response text, or None on error
         """
         pass
+    
+    @abstractmethod
+    def call_with_metrics(
+        self,
+        system_prompt: str,
+        user_message: str,
+        stage: str = "unknown"
+    ) -> Tuple[Optional[str], Dict[str, Any]]:
+        """
+        Call the LLM and return both response and usage metrics.
+        
+        Args:
+            system_prompt: System instructions for the LLM
+            user_message: The actual query/prompt
+            stage: Stage name for logging (e.g., "schema_search", "generate_sql")
+        
+        Returns:
+            Tuple of (response_text, metrics_dict)
+        """
+        pass
 
 
 class OpenAIProvider(LLMProvider):
@@ -115,6 +138,90 @@ class OpenAIProvider(LLMProvider):
         except Exception as e:
             logger.error(f"OpenAI call failed: {e}")
             return None
+    
+    def call_with_metrics(
+        self,
+        system_prompt: str,
+        user_message: str,
+        stage: str = "unknown"
+    ) -> Tuple[Optional[str], Dict[str, Any]]:
+        """Call OpenAI API and capture metrics."""
+        if not self.client:
+            self.initialize()
+        
+        call_id = str(uuid.uuid4())
+        start_time = time.time()
+        response_text = None
+        metrics = {}
+        
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                temperature=self.temperature,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_message}
+                ]
+            )
+            response_text = response.choices[0].message.content
+            
+            # Extract token usage
+            prompt_tokens = response.usage.prompt_tokens
+            completion_tokens = response.usage.completion_tokens
+            total_tokens = response.usage.total_tokens
+            
+            # Calculate cost
+            input_cost, output_cost, total_cost = calculate_cost(
+                self.model, prompt_tokens, completion_tokens
+            )
+            
+            end_time = time.time()
+            latency_ms = (end_time - start_time) * 1000
+            
+            # Create metrics object
+            call_metrics = LLMCallMetrics(
+                call_id=call_id,
+                stage=stage,
+                model=self.model,
+                provider="openai",
+                start_time=start_time,
+                end_time=end_time,
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
+                total_tokens=total_tokens,
+                prompt_length=len(system_prompt + user_message),
+                response_length=len(response_text) if response_text else 0,
+                prompt_text=(system_prompt + user_message)[:300],
+                response_text=response_text[:300] if response_text else None,
+                input_cost=input_cost,
+                output_cost=output_cost,
+                total_cost=total_cost,
+                temperature=self.temperature,
+                success=True,
+                latency_ms=latency_ms,
+            )
+            
+            metrics = call_metrics.to_dict()
+            
+        except Exception as e:
+            end_time = time.time()
+            logger.error(f"OpenAI call failed: {e}")
+            
+            call_metrics = LLMCallMetrics(
+                call_id=call_id,
+                stage=stage,
+                model=self.model,
+                provider="openai",
+                start_time=start_time,
+                end_time=end_time,
+                success=False,
+                error=str(e),
+                temperature=self.temperature,
+                latency_ms=(end_time - start_time) * 1000,
+            )
+            metrics = call_metrics.to_dict()
+        
+        return response_text, metrics
 
 
 class GroqProvider(LLMProvider):
@@ -157,6 +264,98 @@ class GroqProvider(LLMProvider):
                     f"Current fallback default: {DEFAULT_GROQ_MODEL}"
                 )
             return None
+    
+    def call_with_metrics(
+        self,
+        system_prompt: str,
+        user_message: str,
+        stage: str = "unknown"
+    ) -> Tuple[Optional[str], Dict[str, Any]]:
+        """Call Groq API and capture metrics."""
+        if not self.client:
+            self.initialize()
+        
+        call_id = str(uuid.uuid4())
+        start_time = time.time()
+        response_text = None
+        metrics = {}
+        
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                temperature=self.temperature,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_message}
+                ]
+            )
+            response_text = response.choices[0].message.content
+            
+            # Extract token usage
+            prompt_tokens = response.usage.prompt_tokens
+            completion_tokens = response.usage.completion_tokens
+            total_tokens = response.usage.total_tokens
+            
+            # Calculate cost
+            input_cost, output_cost, total_cost = calculate_cost(
+                self.model, prompt_tokens, completion_tokens
+            )
+            
+            end_time = time.time()
+            latency_ms = (end_time - start_time) * 1000
+            
+            # Create metrics object
+            call_metrics = LLMCallMetrics(
+                call_id=call_id,
+                stage=stage,
+                model=self.model,
+                provider="groq",
+                start_time=start_time,
+                end_time=end_time,
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
+                total_tokens=total_tokens,
+                prompt_length=len(system_prompt + user_message),
+                response_length=len(response_text) if response_text else 0,
+                prompt_text=(system_prompt + user_message)[:300],
+                response_text=response_text[:300] if response_text else None,
+                input_cost=input_cost,
+                output_cost=output_cost,
+                total_cost=total_cost,
+                temperature=self.temperature,
+                success=True,
+                latency_ms=latency_ms,
+            )
+            
+            metrics = call_metrics.to_dict()
+            
+        except Exception as e:
+            error_text = str(e)
+            end_time = time.time()
+            
+            if "decommission" in error_text.lower() or "model_decommissioned" in error_text.lower():
+                logger.error(
+                    "Configured Groq model appears deprecated. Set GROQ_MODEL or pass --llm-model. "
+                    f"Current fallback default: {DEFAULT_GROQ_MODEL}"
+                )
+            
+            logger.error(f"Groq call failed: {error_text}")
+            
+            call_metrics = LLMCallMetrics(
+                call_id=call_id,
+                stage=stage,
+                model=self.model,
+                provider="groq",
+                start_time=start_time,
+                end_time=end_time,
+                success=False,
+                error=error_text,
+                temperature=self.temperature,
+                latency_ms=(end_time - start_time) * 1000,
+            )
+            metrics = call_metrics.to_dict()
+        
+        return response_text, metrics
 
 
 # Global LLM instances
@@ -220,3 +419,45 @@ def call_llm(
     """
     llm = get_llm(provider=provider, model=model)
     return llm.call(system_prompt, user_message)
+
+
+def call_llm_with_metrics(
+    system_prompt: str,
+    user_message: str,
+    provider: str = "openai",
+    model: Optional[str] = None,
+    stage: str = "unknown"
+) -> Tuple[Optional[str], Dict[str, Any]]:
+    """
+    Convenience function to call the LLM with metrics tracking.
+    
+    Args:
+        system_prompt: System instructions
+        user_message: User query
+        provider: "openai" or "groq"
+        model: Specific model (uses default if None)
+        stage: Stage name for logging (e.g., "schema_search", "generate_sql")
+    
+    Returns:
+        Tuple of (response, metrics_dict) where metrics_dict contains:
+        - call_id: Unique identifier
+        - stage: Stage name
+        - model: Model name
+        - provider: Provider name
+        - prompt_tokens: Input tokens
+        - completion_tokens: Output tokens
+        - total_tokens: Total tokens
+        - latency_ms: Response time in milliseconds
+        - total_cost: Cost in USD
+        - success: Whether the call succeeded
+        - error: Error message (if any)
+        - And many more detailed metrics...
+    
+    Example:
+        response, metrics = call_llm_with_metrics(
+            system, user, provider="groq", stage="schema_search"
+        )
+        print(f"Tokens: {metrics['total_tokens']}, Cost: ${metrics['total_cost']}")
+    """
+    llm = get_llm(provider=provider, model=model)
+    return llm.call_with_metrics(system_prompt, user_message, stage)

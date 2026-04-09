@@ -7,6 +7,8 @@ from dataclasses import dataclass, field
 from typing import Any, Optional
 from datetime import datetime
 
+from .llm_metrics import LLMMetricsCollector
+
 
 @dataclass
 class Text2SQLState:
@@ -48,6 +50,9 @@ class Text2SQLState:
     final_sql: Optional[str] = None
     execution_result: Optional[dict] = None
     
+    # === LLM METRICS ===
+    llm_metrics: LLMMetricsCollector = field(default_factory=LLMMetricsCollector)
+    
     # === METADATA ===
     logs: list[dict] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
@@ -88,5 +93,6 @@ class Text2SQLState:
             "execution_result": self.execution_result,
             "logs": self.logs,
             "errors": self.errors,
-            "timestamp": self.timestamp
+            "timestamp": self.timestamp,
+            "llm_metrics": self.llm_metrics.to_dict()
         }
