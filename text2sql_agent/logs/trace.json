@@ -1,0 +1,1066 @@
+{
+  "question": "Find the people who named with prefix A or D, only show me their name and their most important info",
+  "db_id": "custom_db",
+  "evidence": null,
+  "normalized_question": "Find the people who named with prefix A or D, only show me their name and their most important info",
+  "schema_context": {
+    "tables": [
+      "customers",
+      "orders"
+    ],
+    "selected_tables": [
+      {
+        "table": "customers",
+        "score": 6.0,
+        "columns": [
+          {
+            "table": "customers",
+            "column": "customer_id",
+            "qualified_name": "customers.customer_id",
+            "type": "INTEGER",
+            "description": "customers.customer_id (INTEGER) likely stores customer id. Sample values: 1, 2, 3.",
+            "sample_values": [
+              "1",
+              "2",
+              "3"
+            ],
+            "is_primary_key": true,
+            "is_foreign_key": false,
+            "key_type": "primary_key",
+            "score": 4.0
+          },
+          {
+            "table": "customers",
+            "column": "name",
+            "qualified_name": "customers.name",
+            "type": "TEXT",
+            "description": "customers.name (TEXT) likely stores name. Sample values: Alice Smith, Bob Johnson, Carol White.",
+            "sample_values": [
+              "Alice Smith",
+              "Bob Johnson",
+              "Carol White"
+            ],
+            "is_primary_key": false,
+            "is_foreign_key": false,
+            "key_type": "regular",
+            "score": 6.0
+          }
+        ]
+      },
+      {
+        "table": "orders",
+        "score": 3.75,
+        "columns": [
+          {
+            "table": "orders",
+            "column": "customer_id",
+            "qualified_name": "orders.customer_id",
+            "type": "INTEGER",
+            "description": "orders.customer_id (INTEGER) likely stores customer id. Sample values: 1, 2.",
+            "sample_values": [
+              "1",
+              "2"
+            ],
+            "is_primary_key": false,
+            "is_foreign_key": true,
+            "key_type": "foreign_key",
+            "score": 3.75
+          },
+          {
+            "table": "orders",
+            "column": "order_id",
+            "qualified_name": "orders.order_id",
+            "type": "INTEGER",
+            "description": "orders.order_id (INTEGER) likely stores order id. Sample values: 1, 2, 3.",
+            "sample_values": [
+              "1",
+              "2",
+              "3"
+            ],
+            "is_primary_key": true,
+            "is_foreign_key": false,
+            "key_type": "primary_key",
+            "score": 3.0
+          }
+        ]
+      }
+    ],
+    "columns": [
+      {
+        "table": "customers",
+        "column": "customer_id",
+        "qualified_name": "customers.customer_id",
+        "type": "INTEGER",
+        "description": "customers.customer_id (INTEGER) likely stores customer id. Sample values: 1, 2, 3.",
+        "sample_values": [
+          "1",
+          "2",
+          "3"
+        ],
+        "is_primary_key": true,
+        "is_foreign_key": false,
+        "key_type": "primary_key",
+        "score": 4.0
+      },
+      {
+        "table": "customers",
+        "column": "name",
+        "qualified_name": "customers.name",
+        "type": "TEXT",
+        "description": "customers.name (TEXT) likely stores name. Sample values: Alice Smith, Bob Johnson, Carol White.",
+        "sample_values": [
+          "Alice Smith",
+          "Bob Johnson",
+          "Carol White"
+        ],
+        "is_primary_key": false,
+        "is_foreign_key": false,
+        "key_type": "regular",
+        "score": 6.0
+      },
+      {
+        "table": "orders",
+        "column": "customer_id",
+        "qualified_name": "orders.customer_id",
+        "type": "INTEGER",
+        "description": "orders.customer_id (INTEGER) likely stores customer id. Sample values: 1, 2.",
+        "sample_values": [
+          "1",
+          "2"
+        ],
+        "is_primary_key": false,
+        "is_foreign_key": true,
+        "key_type": "foreign_key",
+        "score": 3.75
+      },
+      {
+        "table": "orders",
+        "column": "order_id",
+        "qualified_name": "orders.order_id",
+        "type": "INTEGER",
+        "description": "orders.order_id (INTEGER) likely stores order id. Sample values: 1, 2, 3.",
+        "sample_values": [
+          "1",
+          "2",
+          "3"
+        ],
+        "is_primary_key": true,
+        "is_foreign_key": false,
+        "key_type": "primary_key",
+        "score": 3.0
+      }
+    ],
+    "selected_columns": [
+      {
+        "table": "customers",
+        "column": "name",
+        "qualified_name": "customers.name",
+        "type": "TEXT",
+        "description": "customers.name (TEXT) likely stores name. Sample values: Alice Smith, Bob Johnson, Carol White.",
+        "sample_values": [
+          "Alice Smith",
+          "Bob Johnson",
+          "Carol White"
+        ],
+        "is_primary_key": false,
+        "is_foreign_key": false,
+        "key_type": "regular",
+        "score": 15.0,
+        "evidence": [
+          "column:me",
+          "column:name",
+          "text:or"
+        ]
+      },
+      {
+        "table": "customers",
+        "column": "customer_id",
+        "qualified_name": "customers.customer_id",
+        "type": "INTEGER",
+        "description": "customers.customer_id (INTEGER) likely stores customer id. Sample values: 1, 2, 3.",
+        "sample_values": [
+          "1",
+          "2",
+          "3"
+        ],
+        "is_primary_key": true,
+        "is_foreign_key": false,
+        "key_type": "primary_key",
+        "score": 10.5,
+        "evidence": [
+          "column:me",
+          "text:or"
+        ]
+      },
+      {
+        "table": "orders",
+        "column": "customer_id",
+        "qualified_name": "orders.customer_id",
+        "type": "INTEGER",
+        "description": "orders.customer_id (INTEGER) likely stores customer id. Sample values: 1, 2.",
+        "sample_values": [
+          "1",
+          "2"
+        ],
+        "is_primary_key": false,
+        "is_foreign_key": true,
+        "key_type": "foreign_key",
+        "score": 11.45,
+        "evidence": [
+          "column:me",
+          "table:or"
+        ]
+      }
+    ],
+    "graph": {
+      "nodes": {
+        "customers.customer_id": {
+          "table": "customers",
+          "column": "customer_id",
+          "type": "INTEGER",
+          "key_type": "primary_key"
+        },
+        "customers.name": {
+          "table": "customers",
+          "column": "name",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "customers.email": {
+          "table": "customers",
+          "column": "email",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "customers.city": {
+          "table": "customers",
+          "column": "city",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "customers.country": {
+          "table": "customers",
+          "column": "country",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "customers.signup_date": {
+          "table": "customers",
+          "column": "signup_date",
+          "type": "DATE",
+          "key_type": "regular"
+        },
+        "orders.order_id": {
+          "table": "orders",
+          "column": "order_id",
+          "type": "INTEGER",
+          "key_type": "primary_key"
+        },
+        "orders.customer_id": {
+          "table": "orders",
+          "column": "customer_id",
+          "type": "INTEGER",
+          "key_type": "foreign_key"
+        },
+        "orders.order_date": {
+          "table": "orders",
+          "column": "order_date",
+          "type": "DATE",
+          "key_type": "regular"
+        },
+        "orders.total_amount": {
+          "table": "orders",
+          "column": "total_amount",
+          "type": "DECIMAL(10, 2)",
+          "key_type": "regular"
+        },
+        "orders.status": {
+          "table": "orders",
+          "column": "status",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "products.product_id": {
+          "table": "products",
+          "column": "product_id",
+          "type": "INTEGER",
+          "key_type": "primary_key"
+        },
+        "products.name": {
+          "table": "products",
+          "column": "name",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "products.category": {
+          "table": "products",
+          "column": "category",
+          "type": "TEXT",
+          "key_type": "regular"
+        },
+        "products.price": {
+          "table": "products",
+          "column": "price",
+          "type": "DECIMAL(10, 2)",
+          "key_type": "regular"
+        },
+        "products.stock": {
+          "table": "products",
+          "column": "stock",
+          "type": "INTEGER",
+          "key_type": "regular"
+        },
+        "order_items.order_item_id": {
+          "table": "order_items",
+          "column": "order_item_id",
+          "type": "INTEGER",
+          "key_type": "primary_key"
+        },
+        "order_items.order_id": {
+          "table": "order_items",
+          "column": "order_id",
+          "type": "INTEGER",
+          "key_type": "foreign_key"
+        },
+        "order_items.product_id": {
+          "table": "order_items",
+          "column": "product_id",
+          "type": "INTEGER",
+          "key_type": "foreign_key"
+        },
+        "order_items.quantity": {
+          "table": "order_items",
+          "column": "quantity",
+          "type": "INTEGER",
+          "key_type": "regular"
+        },
+        "order_items.unit_price": {
+          "table": "order_items",
+          "column": "unit_price",
+          "type": "DECIMAL(10, 2)",
+          "key_type": "regular"
+        }
+      },
+      "edges": [
+        {
+          "source": "customers.name",
+          "target": "customers.customer_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_id",
+          "target": "customers.name",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "customers.email",
+          "target": "customers.customer_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_id",
+          "target": "customers.email",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "customers.city",
+          "target": "customers.customer_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_id",
+          "target": "customers.city",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "customers.country",
+          "target": "customers.customer_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_id",
+          "target": "customers.country",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "customers.signup_date",
+          "target": "customers.customer_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "customers.customer_id",
+          "target": "customers.signup_date",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "orders.customer_id",
+          "target": "customers.customer_id",
+          "type": "foreign_key",
+          "weight": 0
+        },
+        {
+          "source": "customers.customer_id",
+          "target": "orders.customer_id",
+          "type": "foreign_key_reverse",
+          "weight": 0
+        },
+        {
+          "source": "orders.customer_id",
+          "target": "orders.order_id",
+          "type": "column_to_foreign_key",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_id",
+          "target": "orders.customer_id",
+          "type": "column_to_foreign_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_date",
+          "target": "orders.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_id",
+          "target": "orders.order_date",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "orders.total_amount",
+          "target": "orders.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_id",
+          "target": "orders.total_amount",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "orders.status",
+          "target": "orders.order_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "orders.order_id",
+          "target": "orders.status",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.name",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.name",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.category",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.category",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.price",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.price",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "products.stock",
+          "target": "products.product_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "products.product_id",
+          "target": "products.stock",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_items.product_id",
+          "target": "products.product_id",
+          "type": "foreign_key",
+          "weight": 0
+        },
+        {
+          "source": "products.product_id",
+          "target": "order_items.product_id",
+          "type": "foreign_key_reverse",
+          "weight": 0
+        },
+        {
+          "source": "order_items.order_id",
+          "target": "orders.order_id",
+          "type": "foreign_key",
+          "weight": 0
+        },
+        {
+          "source": "orders.order_id",
+          "target": "order_items.order_id",
+          "type": "foreign_key_reverse",
+          "weight": 0
+        },
+        {
+          "source": "order_items.order_id",
+          "target": "order_items.order_item_id",
+          "type": "column_to_foreign_key",
+          "weight": 1
+        },
+        {
+          "source": "order_items.order_item_id",
+          "target": "order_items.order_id",
+          "type": "column_to_foreign_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_items.product_id",
+          "target": "order_items.order_item_id",
+          "type": "column_to_foreign_key",
+          "weight": 1
+        },
+        {
+          "source": "order_items.order_item_id",
+          "target": "order_items.product_id",
+          "type": "column_to_foreign_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_items.quantity",
+          "target": "order_items.order_item_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_items.order_item_id",
+          "target": "order_items.quantity",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        },
+        {
+          "source": "order_items.unit_price",
+          "target": "order_items.order_item_id",
+          "type": "column_to_primary_key",
+          "weight": 1
+        },
+        {
+          "source": "order_items.order_item_id",
+          "target": "order_items.unit_price",
+          "type": "column_to_primary_key_reverse",
+          "weight": 1
+        }
+      ]
+    },
+    "join_paths": [
+      "customers.customer_id -> orders.customer_id (foreign_key_reverse)",
+      "orders.customer_id -> customers.customer_id (foreign_key)"
+    ],
+    "compact_schema": "RELEVANT SCHEMA:\nTable: customers\n  - name (TEXT): customers.name (TEXT) likely stores name. Sample values: Alice Smith, Bob Johnson, Carol White. Sample: Alice Smith, Bob Johnson, Carol White.\n  - customer_id (INTEGER) [PK]: customers.customer_id (INTEGER) likely stores customer id. Sample values: 1, 2, 3. Sample: 1, 2, 3.\n\nTable: orders\n  - customer_id (INTEGER) [FK]: orders.customer_id (INTEGER) likely stores customer id. Sample values: 1, 2. Sample: 1, 2.\n  - order_id (INTEGER) [PK]: orders.order_id (INTEGER) likely stores order id. Sample values: 1, 2, 3. Sample: 1, 2, 3.",
+    "resulted_schema": "RELEVANT SCHEMA:\nTable: customers\n  - name (TEXT): customers.name (TEXT) likely stores name. Sample values: Alice Smith, Bob Johnson, Carol White. Sample: Alice Smith, Bob Johnson, Carol White.\n  - customer_id (INTEGER) [PK]: customers.customer_id (INTEGER) likely stores customer id. Sample values: 1, 2, 3. Sample: 1, 2, 3.\n\nTable: orders\n  - customer_id (INTEGER) [FK]: orders.customer_id (INTEGER) likely stores customer id. Sample values: 1, 2. Sample: 1, 2.\n  - order_id (INTEGER) [PK]: orders.order_id (INTEGER) likely stores order id. Sample values: 1, 2, 3. Sample: 1, 2, 3.",
+    "grast_sql": {
+      "stage_names": [
+        "schema_enricher",
+        "query_aware_column_encoder",
+        "graph_based_reranker",
+        "steiner_tree_spanner"
+      ],
+      "ranked_top_k": [
+        "customers.name",
+        "customers.customer_id",
+        "orders.customer_id"
+      ],
+      "connected_top_k": [
+        "customers.customer_id",
+        "customers.name",
+        "orders.customer_id",
+        "orders.order_id"
+      ]
+    },
+    "notes": [
+      "Columns ranked by query relevance and boosted by schema structure.",
+      "Key columns were retained to preserve valid join paths."
+    ]
+  },
+  "value_context": {
+    "matched_values": {
+      "customers": {
+        "sample_rows": [
+          {
+            "customer_id": 1,
+            "name": "Alice Smith",
+            "email": "alice@example.com",
+            "city": "New York",
+            "country": "USA",
+            "signup_date": "2023-01-15"
+          },
+          {
+            "customer_id": 2,
+            "name": "Bob Johnson",
+            "email": "bob@example.com",
+            "city": "Los Angeles",
+            "country": "USA",
+            "signup_date": "2023-02-20"
+          }
+        ]
+      },
+      "orders": {
+        "sample_rows": [
+          {
+            "order_id": 1,
+            "customer_id": 1,
+            "order_date": "2023-06-01",
+            "total_amount": 1269.97,
+            "status": "completed"
+          },
+          {
+            "order_id": 2,
+            "customer_id": 2,
+            "order_date": "2023-06-05",
+            "total_amount": 999.99,
+            "status": "completed"
+          }
+        ]
+      }
+    }
+  },
+  "plan": {
+    "raw_plan": "**Step-by-Step Plan for SQL Query**\n\n**1. Tables to Join:**\n- `customers` table: to get the names and most important info of customers\n- `orders` table: to get the order information, but since we're not aggregating or grouping by orders, we might not need to join this table. However, we'll include it for now.\n\n**2. Join Conditions:**\n- Since we want to get the most important info of customers, we'll join `customers` with `orders` on `customer_id` if we decide to use it. However, we might not need to join `orders` table at all.\n\n**3. WHERE Filters:**\n- Filter customers with name prefix A or D: `name LIKE 'A%' OR name LIKE 'D%'`\n\n**4. Grouping/Aggregation:**\n- No grouping or aggregation needed, we just want to show individual customer info.\n\n**5. Sorting:**\n- No sorting needed, we can just select the required columns.\n\n**6. Limits:**\n- No limits needed, we can just select all customers that match the filter.\n\n**Revised Plan:**\n- Since we're not using the `orders` table for aggregation or grouping, we can remove it from the join.\n- We'll select only the required columns from the `customers` table.\n\n**Updated Step-by-Step Plan:**\n\n1. Tables to Join: `customers`\n2. Join Conditions: None\n3. WHERE Filters: `name LIKE 'A%' OR name LIKE 'D%'`\n4. Grouping/Aggregation: None\n5. Sorting: None\n6. Limits: None",
+    "steps": [
+      "**Step-by-Step Plan for SQL Query**",
+      "",
+      "**1. Tables to Join:**",
+      "- `customers` table: to get the names and most important info of customers",
+      "- `orders` table: to get the order information, but since we're not aggregating or grouping by orders, we might not need to join this table. However, we'll include it for now.",
+      "",
+      "**2. Join Conditions:**",
+      "- Since we want to get the most important info of customers, we'll join `customers` with `orders` on `customer_id` if we decide to use it. However, we might not need to join `orders` table at all.",
+      "",
+      "**3. WHERE Filters:**",
+      "- Filter customers with name prefix A or D: `name LIKE 'A%' OR name LIKE 'D%'`",
+      "",
+      "**4. Grouping/Aggregation:**",
+      "- No grouping or aggregation needed, we just want to show individual customer info.",
+      "",
+      "**5. Sorting:**",
+      "- No sorting needed, we can just select the required columns.",
+      "",
+      "**6. Limits:**",
+      "- No limits needed, we can just select all customers that match the filter.",
+      "",
+      "**Revised Plan:**",
+      "- Since we're not using the `orders` table for aggregation or grouping, we can remove it from the join.",
+      "- We'll select only the required columns from the `customers` table.",
+      "",
+      "**Updated Step-by-Step Plan:**",
+      "",
+      "1. Tables to Join: `customers`",
+      "2. Join Conditions: None",
+      "3. WHERE Filters: `name LIKE 'A%' OR name LIKE 'D%'`",
+      "4. Grouping/Aggregation: None",
+      "5. Sorting: None",
+      "6. Limits: None"
+    ]
+  },
+  "candidates": [
+    "SELECT name, customer_id FROM customers WHERE name LIKE 'A%' OR name LIKE 'D%' ",
+    "SELECT name, customer_id FROM customers WHERE name LIKE 'A%' OR name LIKE 'D%' ORDER BY name ",
+    "SELECT name, customer_id FROM customers WHERE name LIKE 'A%' OR name LIKE 'D%' LIMIT 100 ",
+    "SELECT name, customer_id FROM customers WHERE name LIKE 'A%' OR name LIKE 'D%' AND customer_id IS NOT NULL ",
+    "SELECT name, customer_id FROM customers WHERE name LIKE 'A%' OR name LIKE 'D%' AND customer_id IS NOT NULL ORDER BY name"
+  ],
+  "candidate_confidence": [],
+  "validation_results": [
+    {
+      "sql": "SELECT name, customer_id FROM customers WHERE name LIKE 'A%' OR name LIKE 'D%' ",
+      "valid": true,
+      "error": null,
+      "execution_preview": [
+        {
+          "name": "Alice Smith",
+          "customer_id": 1
+        },
+        {
+          "name": "David Brown",
+          "customer_id": 4
+        }
+      ]
+    }
+  ],
+  "best_valid_sql": "SELECT name, customer_id FROM customers WHERE name LIKE 'A%' OR name LIKE 'D%' ",
+  "repair_attempts": 0,
+  "repaired_sql": null,
+  "final_sql": "SELECT name, customer_id FROM customers WHERE name LIKE 'A%' OR name LIKE 'D%' ",
+  "execution_result": {
+    "ok": true,
+    "rows": [
+      {
+        "name": "Alice Smith",
+        "customer_id": 1
+      },
+      {
+        "name": "David Brown",
+        "customer_id": 4
+      }
+    ],
+    "row_count": 2,
+    "error": null
+  },
+  "logs": [
+    {
+      "timestamp": "2026-04-09T06:31:00.166974",
+      "stage": "start",
+      "message": "Text-to-SQL workflow started",
+      "data": {}
+    },
+    {
+      "timestamp": "2026-04-09T06:31:00.167139",
+      "stage": "normalize",
+      "message": "Input normalized",
+      "data": {
+        "original_len": 99,
+        "normalized_len": 99
+      }
+    },
+    {
+      "timestamp": "2026-04-09T06:31:00.168541",
+      "stage": "grast_sql.schema_enricher",
+      "message": "Built enriched schema and FD-style graph",
+      "data": {
+        "num_tables": 4,
+        "num_columns": 21,
+        "num_graph_edges": 40
+      }
+    },
+    {
+      "timestamp": "2026-04-09T06:31:00.168812",
+      "stage": "grast_sql.query_aware_column_encoder",
+      "message": "Computed query-aware column relevance scores",
+      "data": {
+        "top_candidates": [
+          {
+            "column": "customers.name",
+            "score": 15.0
+          },
+          {
+            "column": "products.name",
+            "score": 15.0
+          },
+          {
+            "column": "orders.customer_id",
+            "score": 11.45
+          },
+          {
+            "column": "customers.customer_id",
+            "score": 10.5
+          },
+          {
+            "column": "orders.order_id",
+            "score": 8.5
+          },
+          {
+            "column": "order_items.order_item_id",
+            "score": 8.5
+          },
+          {
+            "column": "order_items.order_id",
+            "score": 7.95
+          },
+          {
+            "column": "order_items.product_id",
+            "score": 6.45
+          }
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-04-09T06:31:05.540228",
+      "stage": "grast_sql.graph_based_reranker",
+      "message": "Reranked top columns with structural priors",
+      "data": {
+        "input_candidates": [
+          "customers.name",
+          "products.name",
+          "orders.customer_id",
+          "customers.customer_id",
+          "orders.order_id",
+          "order_items.order_item_id",
+          "order_items.order_id",
+          "order_items.product_id"
+        ],
+        "reranked_candidates": [
+          "customers.name",
+          "customers.customer_id",
+          "orders.customer_id"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-04-09T06:31:05.540323",
+      "stage": "grast_sql.steiner_tree_spanner",
+      "message": "Expanded selected columns to preserve join connectivity",
+      "data": {
+        "selected_columns": [
+          "customers.name",
+          "customers.customer_id",
+          "orders.customer_id"
+        ],
+        "connected_columns": [
+          "customers.customer_id",
+          "customers.name",
+          "orders.customer_id",
+          "orders.order_id"
+        ],
+        "added_columns": [
+          "orders.order_id"
+        ],
+        "max_hops": 2
+      }
+    },
+    {
+      "timestamp": "2026-04-09T06:31:05.540420",
+      "stage": "schema_search",
+      "message": "Schema context retrieved",
+      "data": {
+        "tables": [
+          "customers",
+          "orders"
+        ],
+        "selected_columns": [
+          "customers.name",
+          "customers.customer_id",
+          "orders.customer_id"
+        ],
+        "connected_columns": [
+          "customers.customer_id",
+          "customers.name",
+          "orders.customer_id",
+          "orders.order_id"
+        ],
+        "join_paths": [
+          "customers.customer_id -> orders.customer_id (foreign_key_reverse)",
+          "orders.customer_id -> customers.customer_id (foreign_key)"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-04-09T06:31:05.540687",
+      "stage": "value_search",
+      "message": "Value context retrieved",
+      "data": {
+        "num_tables_sampled": 2
+      }
+    },
+    {
+      "timestamp": "2026-04-09T06:31:06.352733",
+      "stage": "plan_sql",
+      "message": "SQL plan created",
+      "data": {
+        "raw_plan": "**Step-by-Step Plan for SQL Query**\n\n**1. Tables to Join:**\n- `customers` table: to get the names and most important info of customers\n- `orders` table: to get the order information, but since we're not aggregating or grouping by orders, we might not need to join this table. However, we'll include it for now.\n\n**2. Join Conditions:**\n- Since we want to get the most important info of customers, we'll join `customers` with `orders` on `customer_id` if we decide to use it. However, we might not need to join `orders` table at all.\n\n**3. WHERE Filters:**\n- Filter customers with name prefix A or D: `name LIKE 'A%' OR name LIKE 'D%'`\n\n**4. Grouping/Aggregation:**\n- No grouping or aggregation needed, we just want to show individual customer info.\n\n**5. Sorting:**\n- No sorting needed, we can just select the required columns.\n\n**6. Limits:**\n- No limits needed, we can just select all customers that match the filter.\n\n**Revised Plan:**\n- Since we're not using the `orders` table for aggregation or grouping, we can remove it from the join.\n- We'll select only the required columns from the `customers` table.\n\n**Updated Step-by-Step Plan:**\n\n1. Tables to Join: `customers`\n2. Join Conditions: None\n3. WHERE Filters: `name LIKE 'A%' OR name LIKE 'D%'`\n4. Grouping/Aggregation: None\n5. Sorting: None\n6. Limits: None",
+        "steps": [
+          "**Step-by-Step Plan for SQL Query**",
+          "",
+          "**1. Tables to Join:**",
+          "- `customers` table: to get the names and most important info of customers",
+          "- `orders` table: to get the order information, but since we're not aggregating or grouping by orders, we might not need to join this table. However, we'll include it for now.",
+          "",
+          "**2. Join Conditions:**",
+          "- Since we want to get the most important info of customers, we'll join `customers` with `orders` on `customer_id` if we decide to use it. However, we might not need to join `orders` table at all.",
+          "",
+          "**3. WHERE Filters:**",
+          "- Filter customers with name prefix A or D: `name LIKE 'A%' OR name LIKE 'D%'`",
+          "",
+          "**4. Grouping/Aggregation:**",
+          "- No grouping or aggregation needed, we just want to show individual customer info.",
+          "",
+          "**5. Sorting:**",
+          "- No sorting needed, we can just select the required columns.",
+          "",
+          "**6. Limits:**",
+          "- No limits needed, we can just select all customers that match the filter.",
+          "",
+          "**Revised Plan:**",
+          "- Since we're not using the `orders` table for aggregation or grouping, we can remove it from the join.",
+          "- We'll select only the required columns from the `customers` table.",
+          "",
+          "**Updated Step-by-Step Plan:**",
+          "",
+          "1. Tables to Join: `customers`",
+          "2. Join Conditions: None",
+          "3. WHERE Filters: `name LIKE 'A%' OR name LIKE 'D%'`",
+          "4. Grouping/Aggregation: None",
+          "5. Sorting: None",
+          "6. Limits: None"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-04-09T06:31:06.840261",
+      "stage": "generate_sql",
+      "message": "Generated 5 candidates",
+      "data": {
+        "num_candidates": 5
+      }
+    },
+    {
+      "timestamp": "2026-04-09T06:31:06.840888",
+      "stage": "validate_sql",
+      "message": "Validation passed",
+      "data": {
+        "num_rows": 2
+      }
+    },
+    {
+      "timestamp": "2026-04-09T06:31:06.841209",
+      "stage": "execute_sql",
+      "message": "SQL executed",
+      "data": {
+        "row_count": 2,
+        "error": null
+      }
+    },
+    {
+      "timestamp": "2026-04-09T06:31:06.841276",
+      "stage": "complete",
+      "message": "Workflow completed successfully",
+      "data": {}
+    }
+  ],
+  "errors": [],
+  "timestamp": "2026-04-09T06:31:00.166962",
+  "llm_metrics": {
+    "calls": [
+      {
+        "call_id": "2ce85355-b099-44de-824b-a9f41ce63ef2",
+        "stage": "rerank_columns",
+        "model": "llama-3.1-8b-instant",
+        "provider": "groq",
+        "start_time": 1775716263.4029598,
+        "end_time": 1775716265.5396163,
+        "prompt_tokens": 874,
+        "completion_tokens": 216,
+        "total_tokens": 1090,
+        "prompt_length": 3146,
+        "response_length": 944,
+        "prompt_text": "You are a database expert. \nGiven a natural language question and a database schema, identify the most relevant tables and columns \nthat would be needed to answer the question.\n\nFocus on finding:\n1. Tables that contain the entities or metrics asked about\n2. Columns needed for filtering, grouping, an",
+        "response_text": "Based on the given question and database schema, the most relevant tables and columns to answer the question are:\n\nTo find people with names starting with A or D, we need to identify the table that stores customer information and the column that stores the name.\n\n1. Table: `customers`\n2. Column: `na",
+        "input_cost": 4.3700000000000005e-05,
+        "output_cost": 3.2399999999999995e-05,
+        "total_cost": 7.61e-05,
+        "temperature": 0.3,
+        "success": true,
+        "error": null,
+        "latency_ms": 2136.6565227508545,
+        "tokens_per_second": 510.1428275409804
+      },
+      {
+        "call_id": "c1da5051-fa15-4002-8fd7-cb971c7f1968",
+        "stage": "plan_sql",
+        "model": "llama-3.1-8b-instant",
+        "provider": "groq",
+        "start_time": 1775716265.5409482,
+        "end_time": 1775716266.3526165,
+        "prompt_tokens": 364,
+        "completion_tokens": 341,
+        "total_tokens": 705,
+        "prompt_length": 1236,
+        "response_length": 1316,
+        "prompt_text": "You are a SQL expert. Given a natural language question and relevant database schema,\ncreate a step-by-step plan for how to construct the SQL query.\n\nYour plan should outline:\n1. Which tables to join\n2. What filters or WHERE conditions to apply\n3. Any grouping or aggregation needed\n4. Sorting and li",
+        "response_text": "**Step-by-Step Plan for SQL Query**\n\n**1. Tables to Join:**\n- `customers` table: to get the names and most important info of customers\n- `orders` table: to get the order information, but since we're not aggregating or grouping by orders, we might not need to join this table. However, we'll include i",
+        "input_cost": 1.8200000000000002e-05,
+        "output_cost": 5.1149999999999996e-05,
+        "total_cost": 6.935e-05,
+        "temperature": 0.3,
+        "success": true,
+        "error": null,
+        "latency_ms": 811.6683959960938,
+        "tokens_per_second": 868.5813116264205
+      },
+      {
+        "call_id": "efcab8f3-13f3-4883-ba8f-ce2a43643803",
+        "stage": "generate_sql",
+        "model": "llama-3.1-8b-instant",
+        "provider": "groq",
+        "start_time": 1775716266.3529985,
+        "end_time": 1775716266.8400996,
+        "prompt_tokens": 720,
+        "completion_tokens": 121,
+        "total_tokens": 841,
+        "prompt_length": 2699,
+        "response_length": 492,
+        "prompt_text": "You are an expert SQL developer. Given a natural language question, \na database schema, and a logical plan, generate a SQL query that answers the question.\n\nRequirements:\n1. Generate VALID SQL that will execute on the database\n2. Use standard SQL syntax (works across databases)\n3. Include appropriat",
+        "response_text": "SELECT name, customer_id FROM customers WHERE name LIKE 'A%' OR name LIKE 'D%'\n\nSELECT name, customer_id FROM customers WHERE name LIKE 'A%' OR name LIKE 'D%' ORDER BY name\n\nSELECT name, customer_id FROM customers WHERE name LIKE 'A%' OR name LIKE 'D%' LIMIT 100\n\nSELECT name, customer_id FROM custom",
+        "input_cost": 3.6e-05,
+        "output_cost": 1.8149999999999997e-05,
+        "total_cost": 5.415e-05,
+        "temperature": 0.3,
+        "success": true,
+        "error": null,
+        "latency_ms": 487.10107803344727,
+        "tokens_per_second": 1726.5410361958834
+      }
+    ],
+    "summary": {
+      "total_calls": 3,
+      "total_tokens": 2636,
+      "prompt_tokens": 1958,
+      "completion_tokens": 678,
+      "total_cost_usd": 0.0002,
+      "total_latency_ms": 3435.4259967803955,
+      "avg_latency_ms_per_call": 1145.1419989267986,
+      "tokens_per_second": 767.2993109065369,
+      "by_stage": {
+        "rerank_columns": {
+          "calls": 1,
+          "tokens": 1090,
+          "cost": 7.61e-05,
+          "avg_latency_ms": 2136.6565227508545
+        },
+        "plan_sql": {
+          "calls": 1,
+          "tokens": 705,
+          "cost": 6.935e-05,
+          "avg_latency_ms": 811.6683959960938
+        },
+        "generate_sql": {
+          "calls": 1,
+          "tokens": 841,
+          "cost": 5.415e-05,
+          "avg_latency_ms": 487.10107803344727
+        }
+      }
+    }
+  }
+}

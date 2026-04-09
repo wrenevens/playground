@@ -129,6 +129,7 @@ class ToolSet:
             "graph": enriched_schema.get("graph", {}),
             "join_paths": join_paths,
             "compact_schema": compact_schema,
+            "resulted_schema": compact_schema,
             "grast_sql": {
                 "stage_names": [
                     "schema_enricher",
@@ -257,7 +258,11 @@ Create a step-by-step plan to generate the SQL query. Include:
         
         from .llm_metrics import LLMCallMetrics
         
-        schema_str = state.schema_context.get("compact_schema") or self.schema_loader.get_full_schema_string()
+        schema_str = (
+            state.schema_context.get("resulted_schema")
+            or state.schema_context.get("compact_schema")
+            or f"Relevant tables: {', '.join(state.schema_context.get('tables', []))}"
+        )
         plan_str = "\n".join(state.plan.get("steps", []))
         
         prompt = f"""Question: {state.question}
@@ -346,7 +351,11 @@ Only return SQL, no explanations."""
         
         from .llm_metrics import LLMCallMetrics
         
-        schema_str = self.schema_loader.get_full_schema_string()
+        schema_str = (
+            state.schema_context.get("resulted_schema")
+            or state.schema_context.get("compact_schema")
+            or f"Relevant tables: {', '.join(state.schema_context.get('tables', []))}"
+        )
         
         repair_prompt = REPAIR_SQL_PROMPT.format(
             question=state.question,
