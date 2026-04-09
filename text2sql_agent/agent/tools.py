@@ -622,32 +622,71 @@ Keep key columns that are required for valid joins even if they are not lexicall
     
     def _extract_sql_queries(self, text: str) -> List[str]:
         """Extract SQL queries from LLM response."""
-        # Find all lines starting with SELECT
-        queries = []
-        lines = text.split("\n")
-        current_query = []
-        
-        for line in lines:
-            line = line.strip()
-            if line.upper().startswith("SELECT"):
+        normalized_text = self._normalize_sql_response_text(text)
+
+        # Preserve multiline SQL by collecting from each SELECT/WITH start until the next one.
+        queries: List[str] = []
+        current_query: List[str] = []
+        start_pattern = re.compile(r"^(?:\d+\s*[\).:-]\s*)?(SELECT|WITH)\b", re.IGNORECASE)
+
+        for raw_line in normalized_text.splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("```"):
+                continue
+
+            if start_pattern.match(line):
                 if current_query:
-                    queries.append(" ".join(current_query))
+                    queries.append(" ".join(current_query).strip())
+                # Remove any leading list marker like "1. " or "2) "
+                line = re.sub(r"^\d+\s*[\).:-]\s*", "", line)
                 current_query = [line]
             elif current_query:
                 current_query.append(line)
-        
+
         if current_query:
-            queries.append(" ".join(current_query))
-        
-        return [q for q in queries if q.strip()]
+            queries.append(" ".join(current_query).strip())
+
+        return [q for q in queries if q]
     
     def _extract_sql_from_response(self, text: str) -> str:
         """Extract SQL from LLM response."""
-        lines = text.split("\n")
-        for line in lines:
-            if line.strip().upper().startswith("SELECT"):
-                return line.strip()
-        return text.strip()
+        queries = self._extract_sql_queries(text)
+        if queries:
+            return queries[0]
+        return self._normalize_sql_response_text(text).strip()
+
+    def _normalize_sql_response_text(self, text: str) -> str:
+        """Normalize common LLM SQL response wrappers to plain text SQL content."""
+        normalized = (text or "").replace("\u00a0", " ").strip()
+
+        # Common model shape: JSON object with SQL in response_text/sql/query.
+        payload = self._extract_json_object(normalized)
+        if isinstance(payload, dict):
+            for key in ("response_text", "sql", "query", "sql_query"):
+                value = payload.get(key)
+                if isinstance(value, str) and value.strip():
+                    normalized = value.strip()
+                    break
+
+        # Handle quoted JSON string payloads.
+        if normalized.startswith('"') and normalized.endswith('"'):
+            try:
+                decoded = json.loads(normalized)
+                if isinstance(decoded, str):
+                    normalized = decoded.strip()
+            except Exception:
+                pass
+
+        # Handle escaped newlines/tabs from serialized content.
+        if "\n" not in normalized and "\\n" in normalized:
+            normalized = normalized.replace("\\r\\n", "\n").replace("\\n", "\n").replace("\\t", "\t")
+
+        # Unwrap markdown code fences if present.
+        fence_match = re.search(r"```(?:sql)?\s*(.*?)\s*```", normalized, re.DOTALL | re.IGNORECASE)
+        if fence_match:
+            normalized = fence_match.group(1).strip()
+
+        return normalized
     
     def _check_syntax(self, sql: str, state: Text2SQLState) -> Tuple[bool, Optional[str]]:
         """
