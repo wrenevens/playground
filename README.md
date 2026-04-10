@@ -59,3 +59,11 @@ playground/
 ### Placeholder for LLM Integration
 
 The structure is designed to allow for easy integration of LLMs in the future. Relevant placeholders can be found in `prompts.py` and inside appropriate tools where LLM functionality may be needed.
+
+GrastSql reference:
+@article{hoang2025scaling,
+  title={Scaling Text2SQL via LLM-efficient Schema Filtering with Functional Dependency Graph Rerankers},
+  author={Hoang, Thanh Dat and Nguyen, Thanh Tam and Huynh, Thanh Trung and Yin, Hongzhi and Nguyen, Quoc Viet Hung},
+  journal={arXiv preprint arXiv:2512.16083},
+  year={2025}
+}
